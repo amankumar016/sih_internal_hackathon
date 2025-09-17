@@ -1,4 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Shield } from "lucide-react";
 import NavigationHeader from "@/components/NavigationHeader";
 import SafetyScoreWidget from "@/components/SafetyScoreWidget";
 import LocationCard from "@/components/LocationCard";
@@ -56,6 +57,67 @@ export default function Dashboard() {
             </div>
           </div>
         </div>
+      </section>
+
+      {/* Today's Safety Tips */}
+      <section className="max-w-7xl mx-auto px-6 py-6">
+        <Card className="backdrop-blur-md bg-background/90 border border-white/20 shadow-xl hover-elevate">
+          <CardHeader className="pb-4">
+            <CardTitle className="flex items-center gap-2 text-lg">
+              <Shield className="h-5 w-5 text-trust" data-testid="icon-safety-shield" />
+              Today's Safety Tips for Manali
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ul className="space-y-3 text-sm">
+              <li className="flex items-start gap-3" data-testid="tip-weather">
+                <div className="w-2 h-2 bg-trust rounded-full mt-2 flex-shrink-0"></div>
+                <div>
+                  <strong className="text-foreground">Weather (Sept 17):</strong>{" "}
+                  <span className="text-muted-foreground">
+                    Expect a high of 28°C. The UV Index will reach 7 (High) around 1 PM, so sunscreen is recommended.
+                  </span>
+                </div>
+              </li>
+              <li className="flex items-start gap-3" data-testid="tip-crowd">
+                <div className="w-2 h-2 bg-warning rounded-full mt-2 flex-shrink-0"></div>
+                <div>
+                  <strong className="text-foreground">Crowd Alert:</strong>{" "}
+                  <span className="text-muted-foreground">
+                    Mall Road becomes highly crowded after 6:30 PM, with an estimated 450+ visitors per hour on weekdays.
+                  </span>
+                </div>
+              </li>
+              <li className="flex items-start gap-3" data-testid="tip-fare">
+                <div className="w-2 h-2 bg-success rounded-full mt-2 flex-shrink-0"></div>
+                <div>
+                  <strong className="text-foreground">Fair Fare:</strong>{" "}
+                  <span className="text-muted-foreground">
+                    An auto-rickshaw from Mall Road Market to Hidimba Devi Temple should cost between ₹100 - ₹120. Many local taxis here are prepaid or share-based.
+                  </span>
+                </div>
+              </li>
+              <li className="flex items-start gap-3" data-testid="tip-health">
+                <div className="w-2 h-2 bg-trust rounded-full mt-2 flex-shrink-0"></div>
+                <div>
+                  <strong className="text-foreground">Health & Hydration:</strong>{" "}
+                  <span className="text-muted-foreground">
+                    Air Quality Index (AQI) is moderate at 82. It's advised to drink at least 2.5 liters of water to stay hydrated, especially if trekking.
+                  </span>
+                </div>
+              </li>
+              <li className="flex items-start gap-3" data-testid="tip-emergency">
+                <div className="w-2 h-2 bg-destructive rounded-full mt-2 flex-shrink-0"></div>
+                <div>
+                  <strong className="text-foreground">Emergency Contact:</strong>{" "}
+                  <span className="text-muted-foreground">
+                    The local Tourist Police assistance number is 1363. Response time in central Manali averages under 15 minutes.
+                  </span>
+                </div>
+              </li>
+            </ul>
+          </CardContent>
+        </Card>
       </section>
 
       {/* Main Dashboard */}
