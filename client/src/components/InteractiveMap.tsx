@@ -4,6 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Map, Layers, Navigation, AlertTriangle, MapPin } from "lucide-react";
+import manaliMapImage from "@assets/image_1758110049182.png";
 
 interface HeatMapZone {
   id: string;
@@ -16,11 +17,13 @@ export default function InteractiveMap() {
   const [activeTab, setActiveTab] = useState("physical");
   const [selectedZone, setSelectedZone] = useState<HeatMapZone | null>(null);
 
-  // Mock heat map zones
+  // Mock heat map zones for Manali
   const heatMapZones: HeatMapZone[] = [
-    { id: "1", name: "Tourist Market Area", risk: "safe", coordinates: { lat: 25.5788, lng: 91.8933 } },
-    { id: "2", name: "Remote Trail Section", risk: "moderate", coordinates: { lat: 25.5800, lng: 91.8950 } },
-    { id: "3", name: "Unlit Road Stretch", risk: "high", coordinates: { lat: 25.5820, lng: 91.8970 } }
+    { id: "1", name: "Mall Road Market", risk: "safe", coordinates: { lat: 32.2396, lng: 77.1887 } },
+    { id: "2", name: "Manali Bus Stand Area", risk: "safe", coordinates: { lat: 32.2432, lng: 77.1892 } },
+    { id: "3", name: "Buddhist Monastery", risk: "safe", coordinates: { lat: 32.2389, lng: 77.1901 } },
+    { id: "4", name: "Remote Riverside Path", risk: "moderate", coordinates: { lat: 32.2445, lng: 77.1920 } },
+    { id: "5", name: "Unlit Mountain Trail", risk: "high", coordinates: { lat: 32.2370, lng: 77.1950 } }
   ];
 
   const getRiskColor = (risk: string) => {
@@ -63,29 +66,74 @@ export default function InteractiveMap() {
           </TabsList>
           
           <TabsContent value="physical" className="mt-4">
-            <div className="relative bg-gradient-to-br from-green-100 to-blue-100 dark:from-green-900/20 dark:to-blue-900/20 rounded-lg h-64 flex items-center justify-center border">
-              <div className="text-center space-y-2">
-                <div className="w-16 h-16 mx-auto bg-trust/10 rounded-full flex items-center justify-center">
-                  <Map className="w-8 h-8 text-trust" />
-                </div>
-                <div className="font-medium">Shillong, Meghalaya</div>
-                <div className="text-sm text-muted-foreground">Physical terrain map with roads and landmarks</div>
-                <div className="flex items-center justify-center gap-2 mt-4">
+            <div className="relative rounded-lg h-64 overflow-hidden border">
+              <img 
+                src={manaliMapImage} 
+                alt="Manali Physical Map"
+                className="w-full h-full object-cover"
+                data-testid="image-physical-map"
+              />
+              <div className="absolute bottom-2 left-2 bg-black/70 text-white px-2 py-1 rounded text-xs">
+                <div className="flex items-center gap-2">
                   <div className="w-2 h-2 bg-trust rounded-full animate-pulse"></div>
-                  <span className="text-xs">Live tracking active</span>
+                  <span>Manali, Himachal Pradesh</span>
                 </div>
               </div>
             </div>
           </TabsContent>
           
           <TabsContent value="heatmap" className="mt-4 space-y-4">
-            <div className="relative bg-gradient-to-br from-red-100 via-yellow-100 to-green-100 dark:from-red-900/20 dark:via-yellow-900/20 dark:to-green-900/20 rounded-lg h-64 flex items-center justify-center border">
-              <div className="text-center space-y-2">
-                <div className="w-16 h-16 mx-auto bg-warning/10 rounded-full flex items-center justify-center">
-                  <Layers className="w-8 h-8 text-warning" />
+            <div className="relative rounded-lg h-64 overflow-hidden border">
+              <img 
+                src={manaliMapImage} 
+                alt="Manali Safety Heat Map"
+                className="w-full h-full object-cover"
+                data-testid="image-heat-map"
+              />
+              
+              {/* Heatmap Zone Overlays */}
+              {/* Safe zones - Green */}
+              <div className="absolute top-[25%] left-[45%] w-16 h-12 bg-green-400/60 rounded-full border-2 border-green-600 flex items-center justify-center">
+                <span className="text-xs font-bold text-green-800">SAFE</span>
+              </div>
+              <div className="absolute top-[55%] right-[30%] w-14 h-10 bg-green-400/60 rounded-full border-2 border-green-600 flex items-center justify-center">
+                <span className="text-xs font-bold text-green-800">SAFE</span>
+              </div>
+              <div className="absolute bottom-[35%] left-[35%] w-12 h-10 bg-green-400/60 rounded-full border-2 border-green-600 flex items-center justify-center">
+                <span className="text-xs font-bold text-green-800">SAFE</span>
+              </div>
+              
+              {/* Moderate zones - Yellow */}
+              <div className="absolute top-[20%] right-[25%] w-18 h-14 bg-yellow-400/70 rounded-full border-2 border-yellow-600 flex items-center justify-center">
+                <span className="text-xs font-bold text-yellow-800">MODERATE</span>
+              </div>
+              
+              {/* High risk zones - Red */}
+              <div className="absolute bottom-[25%] right-[20%] w-16 h-12 bg-red-500/70 rounded-full border-2 border-red-700 flex items-center justify-center">
+                <span className="text-xs font-bold text-red-100">HIGH</span>
+              </div>
+              
+              <div className="absolute bottom-2 left-2 bg-black/70 text-white px-2 py-1 rounded text-xs">
+                <div className="flex items-center gap-2">
+                  <Layers className="w-3 h-3" />
+                  <span>Live Safety Analysis</span>
                 </div>
-                <div className="font-medium">Risk Assessment Overlay</div>
-                <div className="text-sm text-muted-foreground">Real-time safety analysis</div>
+              </div>
+              
+              {/* Legend */}
+              <div className="absolute top-2 right-2 bg-white/90 dark:bg-black/90 p-2 rounded text-xs space-y-1">
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                  <span>Safe</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                  <span>Moderate</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                  <span>High Risk</span>
+                </div>
               </div>
             </div>
             
