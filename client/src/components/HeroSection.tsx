@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { useLocation } from "wouter";
 import heroImage from "@assets/generated_images/Meghalaya_waterfall_hero_background_52ebdbd8.png";
@@ -26,7 +25,7 @@ export default function HeroSection() {
             <span className="bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent">
               G.U.A.R.D
             </span>
-            <span className="block text-trust text-3xl md:text-4xl mt-4 font-semibold">
+            <span className="block text-white text-3xl md:text-4xl mt-4 font-semibold">
               Smart Tourist Safety
             </span>
           </h1>
@@ -41,14 +40,14 @@ export default function HeroSection() {
         </div>
 
         {/* Login / Sign Up Button */}
-        <Button
+        <button
           onClick={handleLoginClick}
-          className="bg-trust text-trust-foreground hover:bg-trust/90 hover:scale-105 text-lg font-semibold px-8 py-6 h-auto rounded-lg shadow-xl transition-all duration-300"
+          className="cta-button"
           data-testid="button-homepage-login-signup"
         >
           Login / Sign Up
           <ArrowRight className="w-5 h-5 ml-2" />
-        </Button>
+        </button>
       </div>
     </section>
   );

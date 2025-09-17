@@ -32,11 +32,6 @@ export default function NavigationHeader() {
         {/* Logo */}
         <Link href="/" data-testid="link-logo">
           <div className="flex items-center gap-2 hover-elevate rounded-lg p-2 transition-all duration-200">
-            <img 
-              src="attached_assets/WhatsApp Image 2025-09-10 at 11.53.34 AM_1758109238264.jpeg" 
-              alt="GUARD Logo" 
-              className="w-10 h-10 rounded-lg object-contain"
-            />
             <span className="font-bold text-xl bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">GUARD</span>
           </div>
         </Link>

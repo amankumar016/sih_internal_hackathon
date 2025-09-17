@@ -490,4 +490,34 @@
       transform: translate(2px, -3px);
     }
   }
+
+  /* --- Main Login/Sign Up Button Style --- */
+  .cta-button {
+    display: inline-flex;
+    align-items: center;
+    padding: 14px 32px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    text-decoration: none;
+    color: #FFFFFF;
+    background: linear-gradient(135deg, #4F46E5, #818CF8); /* Dynamic gradient */
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(79, 70, 229, 0.5); /* The "glow" effect */
+    background-size: 200% 200%; /* Needed for the hover animation */
+    transition: all 0.4s ease;
+    cursor: pointer;
+  }
+
+  /* --- Button Hover Effect --- */
+  .cta-button:hover {
+    background-position: right center; /* This shifts the gradient on hover */
+    box-shadow: 0 0 30px rgba(129, 140, 248, 0.7); /* This intensifies the glow */
+  }
+  
+  /* --- Button Focus Effect for Accessibility --- */
+  .cta-button:focus-visible {
+    outline: 2px solid #818CF8;
+    outline-offset: 2px;
+  }
 }
