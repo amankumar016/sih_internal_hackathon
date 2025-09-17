@@ -520,4 +520,21 @@
     outline: 2px solid #818CF8;
     outline-offset: 2px;
   }
+
+  /* --- Chart Background Images --- */
+  .weekly-tourist-chart-content {
+    background-image: url('/attached_assets/Gemini_Generated_Image_tgc8astgc8astgc8_1758121434467.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: #ffffff;
+  }
+
+  .safety-score-chart-content {
+    background-image: url('/attached_assets/Gemini_Generated_Image_savncssavncssavn_1758121434467.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: #ffffff;
+  }
 }
