@@ -1,0 +1,89 @@
+I need to build a new 'Police Dashboard' page for the 'GUARD' website. This page must be created in a new HTML file named police-dashboard.html and linked from the main navigation. It should use the existing global 'Glassmorphism' design system and styles from style.css.
+
+The page will have two main views, controlled by tabs: 'Live Alerts' and 'System Analytics'.
+
+Part 1: Main Page Structure and Tab Navigation
+Header: Create a main header for the page with an <h1> that says "Police Dashboard" and a <p> subtitle that says "Real-time monitoring and emergency response".
+
+Tab Controls: Below the header, create a tab navigation component with two buttons:
+
+A button for "Live Alerts" (this should be the active tab by default).
+
+A button for "System Analytics".
+
+Content Area: Create a main content div that will show the content for the currently active tab.
+
+Part 2: The 'Live Alerts' Tab View (Default View)
+When the 'Live Alerts' tab is active, display a two-column layout.
+
+A. Left Column: Live Alerts Feed
+
+Container: Create a container with the title <h2>Live Alerts</h2> and a filter button next to it.
+
+Alerts List: Create a vertically scrollable list of alert cards. Each card should have the 'Glassmorphism' style and contain:
+
+Tourist Name: e.g., "Priya Sharma" (Bold text).
+
+Tourist ID: e.g., "ID: GRD-891234".
+
+Location: e.g., "Near Hadimba Temple, Manali".
+
+Timestamp: e.g., "2 minutes ago".
+
+Alert Tag: A colored tag on the top right. Use a red tag for "PANIC" and a yellow tag for "Geofence Breach".
+
+Action Buttons:
+
+Acknowledge button (Secondary style: white background, blue border/text).
+
+Escalate button (Destructive style: solid red background, white text).
+
+Auto e-FIR button (Secondary style).
+
+Create at least 3-4 mock alert cards with different names (e.g., Rohit Kumar, Neha Patel) and alert types.
+
+B. Right Column: Details Pane
+
+Alert Details Card: A large 'Glassmorphism' card titled <h2>Alert Details</h2>. When an alert from the left column is clicked, this card should update to show its details:
+
+Tourist Name, ID, Location, and Alert Tag.
+
+Map & Trace Card: Below the details, create a card titled <h3>Live Location & Trail</h3>.
+
+Inside, add a placeholder for a map.
+
+On the map, include two tabs: "Physical" and "Heat Map".
+
+Blockchain Status Card: Below the map, create a small card titled <h3>Blockchain Status</h3> with the following mock data:
+
+Network: Polygon zkEVM
+
+Status: Committed (in green text)
+
+Last Block: 0x181cf428d939
+
+Part 3: The 'System Analytics' Tab View
+When the 'System Analytics' tab is clicked, hide the 'Live Alerts' content and show a grid of analytics widgets. All widgets should use the 'Glassmorphism' card style.
+
+A. Top Row: Summary Cards (Grid of 4)
+
+Card 1: Active Tourists: Icon of a person, Number: 12,847, Sub-text: +8.2% from last month (in green).
+
+Card 2: IoT Devices: Icon of a signal/chip, Number: 1,234, Sub-text: 12 offline.
+
+Card 3: Critical Alerts: Icon of a warning triangle (in red), Number: 23 (in red), Sub-text: 5 new today.
+
+Card 4: System Uptime: Icon of a shield, Number: 99.8%, Sub-text: Operational (in green).
+
+B. Bottom Row: Chart Cards (Grid of 2)
+
+Card 1: Weekly Tourist Activity: Titled <h2>Weekly Tourist Activity</h2>. Include a placeholder for a Bar Chart and a sub-text: "Tourist activity trends".
+
+Card 2: Safety Score Distribution: Titled <h2>Safety Score Distribution</h2>. Include a placeholder for a Pie Chart and a sub-text: "Safety score breakdown".
+
+Part 4: Interactivity (JavaScript)
+Add JavaScript to handle the following:
+
+Tab Switching: Clicking the 'Live Alerts' or 'System Analytics' buttons should show the corresponding content div and hide the other one. The active tab button should have a distinct visual style.
+
+Alert Selection: Clicking on any alert card in the left column of the 'Live Alerts' view should update the content of the 'Alert Details' card in the right column with that alert's specific information.

@@ -13,6 +13,7 @@ import CommunityForum from "@/pages/CommunityForum";
 import Chat from "@/pages/Chat";
 import Settings from "@/pages/Settings";
 import SaarthiAI from "@/pages/SaarthiAI";
+import RescueDashboard from "@/pages/RescueDashboard";
 import NotFound from "@/pages/not-found";
 
 // Component Examples (for development/preview)
@@ -40,6 +41,7 @@ function Router() {
       <Route path="/chat" component={Chat} />
       <Route path="/settings" component={Settings} />
       <Route path="/saarthi" component={SaarthiAI} />
+      <Route path="/rescue-dashboard" component={RescueDashboard} />
       
       {/* Component Examples (for development) */}
       <Route path="/examples/panic-button" component={PanicButtonExample} />

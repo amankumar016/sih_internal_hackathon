@@ -1,0 +1,94 @@
+Of course. You want to build the UI for the "Track Panic Progress" feature, combining the detailed progress timeline from your text with the map and unit information from the image. This feature should appear in a modal (a popup window) when the user clicks the "Track Request" button.
+
+Here is a comprehensive prompt you can use in Replit to build this feature. This prompt details the structure, content, and styling required.
+
+Prompt for Replit AI (Track Panic Progress Modal):
+
+"I need to create a 'Track Panic Progress' modal for the 'GUARD' website. This modal should appear when the user clicks the 'Track Panic Progress' button on the 'Tourist View' page. It will combine a progress timeline with a map and assigned unit details.
+
+Please follow these instructions to build the component.
+
+Part 1: HTML Structure (The Modal)
+Create the Modal Container:
+
+Create a main div for the modal with an ID like #track-panic-modal. It should be hidden by default.
+
+Apply the global 'Glassmorphism' card style to the modal container (semi-transparent background, blur, shadow, etc.).
+
+Inside, create a modal header with an <h2> that says "Track Request" and a "Close" button (an 'X' icon) on the top right.
+
+Top Information Bar:
+
+Below the header, create a div to display the most critical info.
+
+Add two elements side-by-side:
+
+Report ID: REP-LGRRQOWA
+
+ETA: ~15 mins
+
+Middle Section (Two-Column Layout):
+
+Create a two-column grid or flexbox container below the info bar.
+
+Left Column: Create a 'Glassmorphism' card with the title <h3>Map Snapshot</h3>.
+
+Inside, add a map image placeholder.
+
+On top of the map, create two tab buttons: "Physical" (styled as active with a solid blue background) and "Heat Map" (secondary style).
+
+Right Column: Create a 'Glassmorphism' card with the title <h3>Assigned Units</h3>.
+
+Inside, list the assigned units. For each unit, include:
+
+Unit Name & ETA: e.g., "Police Unit 12", "ETA: 6 mins".
+
+Unit Details: e.g., "Vehicle • 4 pax".
+
+Create two mock units based on the image: "Police Unit 12" and "Rescue Team A".
+
+Bottom Section (Progress Timeline):
+
+Below the middle section, create a container with the title <h3>Progress</h3>.
+
+Build a vertical timeline to display the following steps:
+
+Report received by Call Center (Status: —)
+
+Police notified (ETA: 5-8 mins)
+
+Rescue team dispatched (ETA: 12-18 mins)
+
+Medics en route (ETA: 15-20 mins)
+
+e-FIR filed (Status: —)
+
+For the demo, style the first step ("Report received") as "completed" and the rest as "pending".
+
+Part 2: CSS Styling (style.css)
+Modal Styling:
+
+Style the #track-panic-modal to be a fixed-position element that overlays the page content, centered on the screen.
+
+Set its initial display to none. Create an .is-visible class that sets display to block or flex.
+
+Timeline Styling:
+
+Create CSS classes for the vertical timeline.
+
+Each step should have a circle marker. A "completed" step should have a solid blue circle with a checkmark icon inside. A "pending" step should have a simple hollow circle.
+
+Use a pseudo-element (::before or ::after) to draw the vertical connecting line between the circle markers.
+
+General Styling:
+
+Ensure all new elements use the existing 'Inter' font and color palette from the global design system.
+
+Use Flexbox or Grid to align content within the cards as shown in the reference image (e.g., the assigned unit details).
+
+Part 3: JavaScript Interactivity (script.js)
+Show/Hide Modal:
+
+Add an event listener to the 'Track Panic Progress' button on the main page. When clicked, it should add the .is-visible class to the #track-panic-modal div.
+
+Add an event listener to the "Close" button inside the modal. When clicked, it should remove the .is-visible class, hiding the modal.

@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu, Home, Users, MessageSquare, Settings, HelpCircle } from "lucide-react";
+import { Menu, Home, Users, MessageSquare, Settings, HelpCircle, Shield, MapPin } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import PanicButton from "./PanicButton";
 import LanguageSelector from "./LanguageSelector";
+import TrackPanicModal from "./TrackPanicModal";
 
 interface NavigationItem {
   path: string;
@@ -23,6 +24,7 @@ const navigationItems: NavigationItem[] = [
 export default function NavigationHeader() {
   const [location] = useLocation();
   const [isOpen, setIsOpen] = useState(false);
+  const [isTrackModalOpen, setIsTrackModalOpen] = useState(false);
 
   return (
     <header className="sticky top-0 z-50 glass border-b border-border/50" data-testid="header-navigation">
@@ -62,6 +64,27 @@ export default function NavigationHeader() {
 
         {/* Right Side */}
         <div className="flex items-center gap-3">
+          <Link href="/rescue-dashboard" className="hidden md:inline-block">
+            <Button 
+              variant="ghost" 
+              size="sm"
+              className="text-sm transition-all duration-300 hover-elevate active-elevate-2 rounded-lg font-medium border text-orange-600 hover:text-orange-700 border-transparent hover:border-orange-200"
+              data-testid="nav-rescue-dashboard"
+            >
+              <Shield className="w-4 h-4 mr-2" />
+              Rescue Dashboard
+            </Button>
+          </Link>
+          <Button 
+            variant="ghost" 
+            size="sm"
+            className="hidden md:inline-flex text-sm transition-all duration-300 hover-elevate active-elevate-2 rounded-lg font-medium border text-purple-600 hover:text-purple-700 border-transparent hover:border-purple-200"
+            onClick={() => setIsTrackModalOpen(true)}
+            data-testid="nav-track-panic"
+          >
+            <MapPin className="w-4 h-4 mr-2" />
+            Track Panic Progress
+          </Button>
           <LanguageSelector className="hidden md:flex text-blue-600 hover:text-blue-700 hover:bg-blue-50" />
           <PanicButton variant="header" />
           
@@ -93,7 +116,30 @@ export default function NavigationHeader() {
                     </Link>
                   ))}
                 </div>
-                <div className="pt-4 border-t">
+                <div className="pt-4 border-t space-y-2">
+                  <Link href="/rescue-dashboard">
+                    <Button
+                      variant="ghost"
+                      className="w-full justify-start transition-all duration-300 hover-elevate border text-orange-600 hover:text-orange-700 border-transparent hover:border-orange-200"
+                      onClick={() => setIsOpen(false)}
+                      data-testid="mobile-nav-rescue-dashboard"
+                    >
+                      <Shield className="w-4 h-4 mr-3" />
+                      Rescue Dashboard
+                    </Button>
+                  </Link>
+                  <Button
+                    variant="ghost"
+                    className="w-full justify-start transition-all duration-300 hover-elevate border text-purple-600 hover:text-purple-700 border-transparent hover:border-purple-200"
+                    onClick={() => {
+                      setIsOpen(false);
+                      setIsTrackModalOpen(true);
+                    }}
+                    data-testid="mobile-nav-track-panic"
+                  >
+                    <MapPin className="w-4 h-4 mr-3" />
+                    Track Panic Progress
+                  </Button>
                   <LanguageSelector />
                 </div>
               </div>
@@ -101,6 +147,10 @@ export default function NavigationHeader() {
           </Sheet>
         </div>
       </div>
+      <TrackPanicModal 
+        isOpen={isTrackModalOpen} 
+        onClose={() => setIsTrackModalOpen(false)} 
+      />
     </header>
   );
 }
