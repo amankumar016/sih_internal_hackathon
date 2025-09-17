@@ -20,6 +20,7 @@ import {
   Signal
 } from "lucide-react";
 import NavigationHeader from "@/components/NavigationHeader";
+import manaliMapImg from '@assets/image_1758117701636.png';
 
 interface Alert {
   id: string;
@@ -266,18 +267,157 @@ export default function RescueDashboard() {
                         <TabsTrigger value="heatmap">Heat Map</TabsTrigger>
                       </TabsList>
                       <TabsContent value="physical">
-                        <div className="bg-muted rounded-lg h-48 flex items-center justify-center">
-                          <div className="text-center">
-                            <Map className="w-12 h-12 mx-auto text-muted-foreground mb-2" />
-                            <p className="text-sm text-muted-foreground">Physical map view</p>
+                        <div 
+                          className="relative h-48 bg-cover bg-center rounded-lg overflow-hidden"
+                          style={{ 
+                            backgroundImage: `url(${manaliMapImg})`,
+                            backgroundBlendMode: 'overlay'
+                          }}
+                        >
+                          {/* Physical Map Overlay */}
+                          <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-green-500/10 backdrop-blur-[0.5px]"></div>
+                          
+                          {/* Tourist Location Markers */}
+                          <div className="absolute top-4 left-16">
+                            <div className="w-3 h-3 bg-blue-500 rounded-full animate-pulse shadow-lg"></div>
+                          </div>
+                          <div className="absolute top-12 right-20">
+                            <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse shadow-lg"></div>
+                          </div>
+                          <div className="absolute bottom-8 left-12">
+                            <div className="w-3 h-3 bg-yellow-500 rounded-full animate-pulse shadow-lg"></div>
+                          </div>
+                          <div className="absolute bottom-6 right-16">
+                            <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse shadow-lg"></div>
+                          </div>
+                          
+                          {/* Live Trail Path */}
+                          <svg className="absolute inset-0 w-full h-full pointer-events-none">
+                            <path
+                              d="M 60 40 Q 120 60 180 50 Q 240 40 300 70 L 350 90"
+                              stroke="#10b981"
+                              strokeWidth="3"
+                              fill="none"
+                              strokeDasharray="6 6"
+                              className="opacity-80"
+                              style={{
+                                animation: `dash 2s linear infinite`
+                              }}
+                            />
+                          </svg>
+                          
+                          {/* Legend for Physical Map */}
+                          <div className="absolute top-2 right-2 bg-background/90 backdrop-blur-sm p-2 rounded text-xs">
+                            <div className="flex items-center gap-1 mb-1">
+                              <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                              <span>Safe</span>
+                            </div>
+                            <div className="flex items-center gap-1 mb-1">
+                              <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+                              <span>Caution</span>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                              <span>Alert</span>
+                            </div>
                           </div>
                         </div>
                       </TabsContent>
                       <TabsContent value="heatmap">
-                        <div className="bg-muted rounded-lg h-48 flex items-center justify-center">
-                          <div className="text-center">
-                            <Layers className="w-12 h-12 mx-auto text-muted-foreground mb-2" />
-                            <p className="text-sm text-muted-foreground">Heat map view</p>
+                        <div 
+                          className="relative h-48 bg-cover bg-center rounded-lg overflow-hidden"
+                          style={{ 
+                            backgroundImage: `url(${manaliMapImg})`,
+                            backgroundBlendMode: 'multiply'
+                          }}
+                        >
+                          {/* Heatmap Overlay */}
+                          <div className="absolute inset-0 bg-gradient-to-br from-red-500/20 to-green-500/20"></div>
+                          
+                          {/* Heat Map Regions */}
+                          <svg className="absolute inset-0 w-full h-full">
+                            {/* High Risk Zone - Mall Road Area */}
+                            <ellipse 
+                              cx="280" 
+                              cy="70" 
+                              rx="50" 
+                              ry="30" 
+                              fill="rgba(239, 68, 68, 0.4)"
+                              className="animate-pulse"
+                            />
+                            
+                            {/* Medium Risk Zone - Tourist Spots */}
+                            <ellipse 
+                              cx="120" 
+                              cy="100" 
+                              rx="40" 
+                              ry="35" 
+                              fill="rgba(245, 158, 11, 0.3)"
+                            />
+                            
+                            {/* Low Risk Zone - Residential Areas */}
+                            <ellipse 
+                              cx="200" 
+                              cy="140" 
+                              rx="60" 
+                              ry="25" 
+                              fill="rgba(16, 185, 129, 0.3)"
+                            />
+                            
+                            {/* High Activity Zone - Beas River */}
+                            <ellipse 
+                              cx="350" 
+                              cy="120" 
+                              rx="45" 
+                              ry="40" 
+                              fill="rgba(139, 92, 246, 0.3)"
+                            />
+                            
+                            {/* Risk Intensity Gradients */}
+                            <defs>
+                              <radialGradient id="highRiskGradient" cx="50%" cy="50%" r="50%">
+                                <stop offset="0%" stopColor="rgba(239, 68, 68, 0.6)" />
+                                <stop offset="100%" stopColor="rgba(239, 68, 68, 0.1)" />
+                              </radialGradient>
+                              <radialGradient id="mediumRiskGradient" cx="50%" cy="50%" r="50%">
+                                <stop offset="0%" stopColor="rgba(245, 158, 11, 0.5)" />
+                                <stop offset="100%" stopColor="rgba(245, 158, 11, 0.1)" />
+                              </radialGradient>
+                              <radialGradient id="lowRiskGradient" cx="50%" cy="50%" r="50%">
+                                <stop offset="0%" stopColor="rgba(16, 185, 129, 0.4)" />
+                                <stop offset="100%" stopColor="rgba(16, 185, 129, 0.1)" />
+                              </radialGradient>
+                            </defs>
+                            
+                            {/* Apply gradients */}
+                            <circle cx="280" cy="70" r="35" fill="url(#highRiskGradient)" />
+                            <circle cx="120" cy="100" r="25" fill="url(#mediumRiskGradient)" />
+                            <circle cx="200" cy="140" r="30" fill="url(#lowRiskGradient)" />
+                          </svg>
+                          
+                          {/* Heatmap Legend */}
+                          <div className="absolute bottom-2 left-2 bg-background/90 backdrop-blur-sm p-2 rounded text-xs">
+                            <h4 className="font-medium mb-1">Risk Intensity</h4>
+                            <div className="flex items-center gap-1 mb-1">
+                              <div className="w-3 h-2 bg-red-500 rounded"></div>
+                              <span>High</span>
+                            </div>
+                            <div className="flex items-center gap-1 mb-1">
+                              <div className="w-3 h-2 bg-yellow-500 rounded"></div>
+                              <span>Medium</span>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <div className="w-3 h-2 bg-green-500 rounded"></div>
+                              <span>Low</span>
+                            </div>
+                          </div>
+                          
+                          {/* Live Activity Indicator */}
+                          <div className="absolute top-2 right-2 bg-background/90 backdrop-blur-sm p-2 rounded text-xs">
+                            <div className="flex items-center gap-1">
+                              <div className="w-2 h-2 bg-pulse animate-pulse rounded-full"></div>
+                              <span>Live Data</span>
+                            </div>
                           </div>
                         </div>
                       </TabsContent>

@@ -36,6 +36,8 @@ import {
   Handshake
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import manaliMapImg from '@assets/image_1758117701636.png';
+import aiAvatarImg from '@assets/image_1758117890886.png';
 
 interface DataSource {
   id: string;
@@ -65,6 +67,7 @@ export default function SaarthiAI() {
   const [currentTrailPath, setCurrentTrailPath] = useState("");
   const [parallelSimHours, setParallelSimHours] = useState(0);
   const [parallelSimRunning, setParallelSimRunning] = useState(false);
+  const [avatarPosition, setAvatarPosition] = useState({ x: 0, y: 0, rotation: 0 });
   const animationInterval = useRef<NodeJS.Timeout | null>(null);
   const parallelAnimationInterval = useRef<NodeJS.Timeout | null>(null);
   const { toast } = useToast();
@@ -217,37 +220,104 @@ export default function SaarthiAI() {
     setIsAnimating(true);
     setHourSlider(0);
     
-    // Generate random trail path
+    // Generate enhanced random trail covering entire map with sharp turns and curvatures
     const generateRandomTrail = () => {
       const points = [];
-      const numPoints = Math.floor(Math.random() * 4) + 4; // 4-7 points
+      const numPoints = Math.floor(Math.random() * 6) + 8; // 8-13 points for better coverage
       
+      // Generate points that cover the entire map area (full 500x380)
       for (let i = 0; i < numPoints; i++) {
-        const x = (i / (numPoints - 1)) * 400 + 50; // Distribute along width
-        const y = Math.random() * 200 + 100; // Random height
+        let x, y;
+        
+        if (i === 0) {
+          // Start from a random edge
+          const edge = Math.floor(Math.random() * 4);
+          switch (edge) {
+            case 0: x = Math.random() * 500; y = 20; break; // Top
+            case 1: x = 480; y = Math.random() * 380; break; // Right
+            case 2: x = Math.random() * 500; y = 360; break; // Bottom
+            default: x = 20; y = Math.random() * 380; break; // Left
+          }
+        } else if (i === numPoints - 1) {
+          // End at opposite edge or corner
+          const edge = Math.floor(Math.random() * 4);
+          switch (edge) {
+            case 0: x = Math.random() * 500; y = 360; break; // Bottom
+            case 1: x = 20; y = Math.random() * 380; break; // Left
+            case 2: x = Math.random() * 500; y = 20; break; // Top
+            default: x = 480; y = Math.random() * 380; break; // Right
+          }
+        } else {
+          // Intermediate points covering full area with some randomness for sharp turns
+          x = Math.random() * 460 + 20; // Full width coverage
+          y = Math.random() * 340 + 20; // Full height coverage
+          
+          // Add chance for sharp directional changes
+          if (Math.random() > 0.7) {
+            const prevX = points[i-1] ? parseFloat(points[i-1].split(' ')[0]) : x;
+            const prevY = points[i-1] ? parseFloat(points[i-1].split(' ')[1]) : y;
+            
+            // Create sharp turn by offsetting significantly
+            x = prevX + (Math.random() - 0.5) * 200;
+            y = prevY + (Math.random() - 0.5) * 200;
+            
+            // Keep within bounds
+            x = Math.max(20, Math.min(480, x));
+            y = Math.max(20, Math.min(360, y));
+          }
+        }
+        
         points.push(`${x} ${y}`);
       }
       
-      // Create smooth curve using quadratic bezier
+      // Create path with mix of smooth curves and sharp turns
       let path = `M ${points[0]}`;
       for (let i = 1; i < points.length - 1; i++) {
         const [x1, y1] = points[i - 1].split(' ').map(Number);
         const [x2, y2] = points[i].split(' ').map(Number);
-        const [x3, y3] = points[i + 1].split(' ').map(Number);
+        const [x3, y3] = points[i + 1]?.split(' ').map(Number) || [x2, y2];
         
-        const cpx = x2;
-        const cpy = y2;
-        const endx = (x2 + x3) / 2;
-        const endy = (y2 + y3) / 2;
-        
-        path += ` Q ${cpx} ${cpy} ${endx} ${endy}`;
+        // Random chance for sharp turn vs smooth curve
+        if (Math.random() > 0.6) {
+          // Sharp turn - direct line
+          path += ` L ${x2} ${y2}`;
+        } else {
+          // Smooth curve with random control point variations
+          const cpx = x2 + (Math.random() - 0.5) * 100;
+          const cpy = y2 + (Math.random() - 0.5) * 100;
+          const endx = (x2 + x3) / 2;
+          const endy = (y2 + y3) / 2;
+          
+          path += ` Q ${cpx} ${cpy} ${endx} ${endy}`;
+        }
       }
       path += ` L ${points[points.length - 1]}`;
       
       return path;
     };
     
-    setCurrentTrailPath(generateRandomTrail());
+    const newTrailPath = generateRandomTrail();
+    setCurrentTrailPath(newTrailPath);
+    
+    // Extract path coordinates for avatar movement
+    const extractPathCoordinates = (pathString: string) => {
+      const coords = [];
+      const matches = pathString.match(/[\d.]+/g);
+      if (matches) {
+        for (let i = 0; i < matches.length; i += 2) {
+          if (matches[i + 1]) {
+            coords.push({
+              x: parseFloat(matches[i]),
+              y: parseFloat(matches[i + 1])
+            });
+          }
+        }
+      }
+      return coords;
+    };
+    
+    const pathCoordinates = extractPathCoordinates(newTrailPath);
+    setAvatarPosition({ x: pathCoordinates[0]?.x || 50, y: pathCoordinates[0]?.y || 50, rotation: 0 });
     
     // Animate slider from 0 to 4 over 8-12 seconds for more realistic simulation
     let progress = 0;
@@ -255,6 +325,28 @@ export default function SaarthiAI() {
     animationInterval.current = setInterval(() => {
       progress += 100;
       const currentHour = (progress / duration) * 4;
+      
+      // Calculate avatar position along path
+      if (pathCoordinates.length > 1) {
+        const pathProgress = progress / duration;
+        const segmentIndex = Math.floor(pathProgress * (pathCoordinates.length - 1));
+        const segmentProgress = (pathProgress * (pathCoordinates.length - 1)) % 1;
+        
+        if (segmentIndex < pathCoordinates.length - 1) {
+          const startPoint = pathCoordinates[segmentIndex];
+          const endPoint = pathCoordinates[segmentIndex + 1];
+          
+          const x = startPoint.x + (endPoint.x - startPoint.x) * segmentProgress;
+          const y = startPoint.y + (endPoint.y - startPoint.y) * segmentProgress;
+          
+          // Calculate rotation based on direction
+          const dx = endPoint.x - startPoint.x;
+          const dy = endPoint.y - startPoint.y;
+          const rotation = Math.atan2(dy, dx) * (180 / Math.PI);
+          
+          setAvatarPosition({ x, y, rotation });
+        }
+      }
       
       if (currentHour >= 4) {
         setHourSlider(4);
@@ -804,7 +896,7 @@ export default function SaarthiAI() {
               <div 
                 className="relative h-96 bg-cover bg-center rounded-lg overflow-hidden"
                 style={{ 
-                  backgroundImage: `url('@assets/image_1758110049182.png')`,
+                  backgroundImage: `url(${manaliMapImg})`,
                   backgroundBlendMode: 'overlay'
                 }}
               >
@@ -830,9 +922,32 @@ export default function SaarthiAI() {
                   </div>
                 </div>
 
+                {/* 3D AI Avatar Movement */}
+                {isAnimating && (
+                  <div 
+                    className="absolute w-12 h-12 transition-all duration-100 ease-linear z-20"
+                    style={{
+                      left: `${avatarPosition.x - 24}px`,
+                      top: `${avatarPosition.y - 24}px`,
+                      transform: `rotate(${avatarPosition.rotation + 90}deg)`,
+                      filter: 'drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3))'
+                    }}
+                  >
+                    <img 
+                      src={aiAvatarImg}
+                      alt="AI Avatar"
+                      className="w-full h-full object-contain"
+                      data-testid="avatar-ai"
+                      style={{
+                        animation: 'bounce 2s infinite'
+                      }}
+                    />
+                  </div>
+                )}
+
                 {/* Enhanced Multi-Layer Animated Trails with Increased Activity */}
                 {isAnimating && currentTrailPath && (
-                  <svg className="absolute inset-0 w-full h-full pointer-events-none">
+                  <svg className="absolute inset-0 w-full h-full pointer-events-none z-10">
                     {/* Primary Trail - Main Path */}
                     <path
                       d={currentTrailPath}

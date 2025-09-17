@@ -389,4 +389,21 @@
       stroke-dashoffset: 0;
     }
   }
+
+  /* Dash animation for rescue dashboard trails */
+  @keyframes dash {
+    to {
+      stroke-dashoffset: -12;
+    }
+  }
+
+  /* Bounce animation for avatar movement */
+  @keyframes bounce {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-4px);
+    }
+  }
 }
