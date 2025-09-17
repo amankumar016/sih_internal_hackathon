@@ -38,6 +38,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import manaliMapImg from '@assets/image_1758117701636.png';
 import aiAvatarImg from '@assets/image_1758117890886.png';
+import simulationMapImg from '@assets/image_1758118946817.png';
 
 interface DataSource {
   id: string;
@@ -1366,10 +1367,16 @@ export default function SaarthiAI() {
           <div className="grid md:grid-cols-2 gap-6">
             {/* Left Column - Map Preview */}
             <div className="space-y-4">
-              <div className="bg-muted/50 rounded-lg p-4 text-center">
-                <MapPin className="w-12 h-12 mx-auto mb-2 text-muted-foreground" />
-                <p className="text-sm text-muted-foreground">Map Preview (Demo)</p>
-                <p className="text-xs text-muted-foreground mt-1">Interactive 3D simulation environment</p>
+              <div className="bg-white rounded-lg overflow-hidden">
+                <img 
+                  src={simulationMapImg} 
+                  alt="Map Preview for Parallel World Simulation" 
+                  className="w-full h-48 object-cover"
+                />
+                <div className="p-3 text-center">
+                  <p className="text-sm font-medium text-foreground">Map Preview (Demo)</p>
+                  <p className="text-xs text-muted-foreground mt-1">Interactive 3D simulation environment</p>
+                </div>
               </div>
               
               <div className="space-y-3">

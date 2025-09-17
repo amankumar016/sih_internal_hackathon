@@ -21,6 +21,8 @@ import {
 } from "lucide-react";
 import NavigationHeader from "@/components/NavigationHeader";
 import manaliMapImg from '@assets/image_1758117701636.png';
+import weeklyTouristChartImg from '@assets/Gemini_Generated_Image_tgc8astgc8astgc8_1758118779489.png';
+import safetyScoreChartImg from '@assets/image_1758119118225.png';
 
 interface Alert {
   id: string;
@@ -529,12 +531,12 @@ export default function RescueDashboard() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="bg-muted rounded-lg h-64 flex items-center justify-center">
-                    <div className="text-center">
-                      <BarChart3 className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
-                      <p className="text-sm text-muted-foreground">Bar Chart Placeholder</p>
-                      <p className="text-xs text-muted-foreground mt-2">Tourist activity trends</p>
-                    </div>
+                  <div className="rounded-lg h-64 overflow-hidden bg-white">
+                    <img 
+                      src={weeklyTouristChartImg} 
+                      alt="Weekly Tourist Activity Chart" 
+                      className="w-full h-full object-cover"
+                    />
                   </div>
                 </CardContent>
               </Card>
@@ -547,12 +549,12 @@ export default function RescueDashboard() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="bg-muted rounded-lg h-64 flex items-center justify-center">
-                    <div className="text-center">
-                      <PieChart className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
-                      <p className="text-sm text-muted-foreground">Pie Chart Placeholder</p>
-                      <p className="text-xs text-muted-foreground mt-2">Safety score breakdown</p>
-                    </div>
+                  <div className="rounded-lg h-64 overflow-hidden bg-white">
+                    <img 
+                      src={safetyScoreChartImg} 
+                      alt="Safety Score Distribution Chart" 
+                      className="w-full h-full object-cover"
+                    />
                   </div>
                 </CardContent>
               </Card>
