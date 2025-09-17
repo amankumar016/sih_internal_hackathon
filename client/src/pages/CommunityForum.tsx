@@ -23,7 +23,18 @@ import {
   TrendingUp,
   DollarSign,
   AlertTriangle,
-  HelpCircle
+  HelpCircle,
+  Trophy,
+  Target,
+  UserCheck,
+  Calendar,
+  CheckCircle,
+  Lock,
+  Shield,
+  Camera,
+  Globe,
+  Navigation,
+  Flag
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -217,6 +228,270 @@ export default function CommunityForum() {
                 </div>
               </DialogContent>
             </Dialog>
+          </div>
+        </div>
+      </section>
+
+      {/* Guardian Gamification */}
+      <section className="max-w-6xl mx-auto px-6 py-8">
+        <div className="space-y-8">
+          {/* Header */}
+          <div className="text-center">
+            <h2 className="text-2xl font-bold mb-2">Guardian Gamification</h2>
+            <p className="text-muted-foreground">Earn rewards for staying safe and helping others</p>
+          </div>
+
+          {/* A. Main Progress & Leaderboard Section */}
+          <div className="grid md:grid-cols-2 gap-8">
+            {/* Left Column - Your Progress */}
+            <Card className="backdrop-blur-md bg-background/90 border border-white/20 shadow-xl hover-elevate">
+              <CardHeader className="pb-4">
+                <CardTitle className="flex items-center gap-2">
+                  <Trophy className="h-5 w-5 text-warning" data-testid="icon-trophy" />
+                  Your Progress
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                {/* Level Display */}
+                <div className="text-center">
+                  <div className="text-4xl font-bold text-trust mb-2">Level 8</div>
+                  <div className="text-lg font-semibold text-muted-foreground">Safety Explorer</div>
+                  <div className="text-right mt-2 text-sm text-muted-foreground">15,670 Total Points</div>
+                </div>
+
+                {/* XP Progress Bar */}
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Next Level Progress</span>
+                    <span className="font-medium">2,340 / 2,500 XP</span>
+                  </div>
+                  <div className="w-full bg-muted rounded-full h-3">
+                    <div 
+                      className="bg-trust h-3 rounded-full transition-all duration-500" 
+                      style={{ width: '93.6%' }}
+                    ></div>
+                  </div>
+                </div>
+
+                {/* Summary Cards */}
+                <div className="grid grid-cols-3 gap-3">
+                  <Card className="text-center p-3">
+                    <div className="text-2xl font-bold text-trust">7</div>
+                    <div className="text-xs text-muted-foreground">Day Streak</div>
+                  </Card>
+                  <Card className="text-center p-3">
+                    <div className="text-2xl font-bold text-success">5</div>
+                    <div className="text-xs text-muted-foreground">Badges Earned</div>
+                  </Card>
+                  <Card className="text-center p-3">
+                    <div className="text-2xl font-bold text-warning">#4</div>
+                    <div className="text-xs text-muted-foreground">Global Rank</div>
+                  </Card>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Right Column - Leaderboard */}
+            <Card className="backdrop-blur-md bg-background/90 border border-white/20 shadow-xl hover-elevate">
+              <CardHeader className="pb-4">
+                <CardTitle className="flex items-center gap-2">
+                  <Star className="h-5 w-5 text-warning fill-warning" data-testid="icon-star" />
+                  Leaderboard
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {[
+                    { rank: 1, name: "Priya Sharma", points: "18,450 pts", isCurrentUser: false },
+                    { rank: 2, name: "Amit Kumar", points: "17,230 pts", isCurrentUser: false },
+                    { rank: 3, name: "Rajesh Singh", points: "16,890 pts", isCurrentUser: false },
+                    { rank: 4, name: "You", points: "15,670 pts", isCurrentUser: true },
+                    { rank: 5, name: "Diksha Patel", points: "15,120 pts", isCurrentUser: false }
+                  ].map((user) => (
+                    <div 
+                      key={user.rank}
+                      className={`flex items-center gap-3 p-3 rounded-lg ${
+                        user.isCurrentUser ? 'bg-trust/10 border border-trust/20' : 'bg-muted/50'
+                      }`}
+                      data-testid={`leaderboard-rank-${user.rank}`}
+                    >
+                      <div className="text-sm font-bold w-6">#{user.rank}</div>
+                      <div className="w-8 h-8 rounded-full bg-trust/10 flex items-center justify-center">
+                        <User className="w-4 h-4" />
+                      </div>
+                      <div className="flex-1">
+                        <div className={`font-medium ${user.isCurrentUser ? 'text-trust' : ''}`}>
+                          {user.name}
+                        </div>
+                      </div>
+                      <div className="text-sm text-muted-foreground">{user.points}</div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* B. Active Challenges Section */}
+          <div className="space-y-6">
+            <h2 className="text-xl font-bold flex items-center gap-2">
+              <Target className="h-5 w-5 text-trust" data-testid="icon-target" />
+              Active Challenges
+            </h2>
+            
+            <div className="grid md:grid-cols-2 gap-6">
+              {[
+                {
+                  title: "Daily Check-in Streak",
+                  description: "Check-in daily for 7 days",
+                  xp: "+500 XP",
+                  progress: { current: 7, total: 7 },
+                  icon: Calendar,
+                  completed: true
+                },
+                {
+                  title: "Safety Reporter",
+                  description: "Report 3 safety observations",
+                  xp: "+300 XP", 
+                  progress: { current: 2, total: 3 },
+                  icon: Shield,
+                  completed: false
+                },
+                {
+                  title: "Community Helper",
+                  description: "Help 5 fellow travelers",
+                  xp: "+750 XP",
+                  progress: { current: 1, total: 5 },
+                  icon: User,
+                  completed: false
+                },
+                {
+                  title: "Photo Documentation", 
+                  description: "Share 10 location photos",
+                  xp: "+400 XP",
+                  progress: { current: 8, total: 10 },
+                  icon: Camera,
+                  completed: false
+                }
+              ].map((challenge, index) => (
+                <Card key={index} className="backdrop-blur-md bg-background/90 border border-white/20 shadow-xl hover-elevate">
+                  <CardContent className="p-6">
+                    <div className="space-y-4">
+                      <div className="flex items-start justify-between">
+                        <div className="flex items-center gap-3">
+                          <challenge.icon className="h-5 w-5 text-trust" />
+                          <div>
+                            <h3 className="font-semibold">{challenge.title}</h3>
+                            <p className="text-sm text-muted-foreground">{challenge.description}</p>
+                          </div>
+                        </div>
+                        <Badge className={challenge.completed ? "bg-success text-success-foreground" : "bg-trust text-trust-foreground"}>
+                          {challenge.xp}
+                        </Badge>
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <div className="flex justify-between text-sm">
+                          <span className="text-muted-foreground">Progress</span>
+                          <span className="font-medium">{challenge.progress.current} / {challenge.progress.total}</span>
+                        </div>
+                        <div className="w-full bg-muted rounded-full h-2">
+                          <div 
+                            className={`h-2 rounded-full transition-all duration-500 ${challenge.completed ? 'bg-success' : 'bg-trust'}`}
+                            style={{ width: `${(challenge.progress.current / challenge.progress.total) * 100}%` }}
+                          ></div>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+
+          {/* C. Achievement Badges Section */}
+          <div className="space-y-6">
+            <h2 className="text-xl font-bold flex items-center gap-2">
+              <UserCheck className="h-5 w-5 text-trust" data-testid="icon-user-check" />
+              Achievement Badges
+            </h2>
+            
+            <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {[
+                {
+                  title: "Safety Scout",
+                  description: "Report 5 safety observations", 
+                  icon: Shield,
+                  earned: true
+                },
+                {
+                  title: "Explorer",
+                  description: "Visit 10 different locations",
+                  icon: Navigation,
+                  earned: true
+                },
+                {
+                  title: "Community Star",
+                  description: "Get 50 upvotes on posts",
+                  icon: Star,
+                  earned: true
+                },
+                {
+                  title: "Helper",
+                  description: "Help 20 fellow travelers",
+                  icon: User,
+                  earned: true
+                },
+                {
+                  title: "Global Traveler",
+                  description: "Travel to 5+ states",
+                  icon: Globe,
+                  earned: true
+                },
+                {
+                  title: "Photo Master",
+                  description: "Share 50 quality photos",
+                  icon: Camera,
+                  earned: false
+                },
+                {
+                  title: "Guardian Elite",
+                  description: "Reach Level 10",
+                  icon: Trophy,
+                  earned: false
+                },
+                {
+                  title: "Mission Complete",
+                  description: "Complete all challenges",
+                  icon: Flag,
+                  earned: false
+                }
+              ].map((badge, index) => (
+                <Card key={index} className={`text-center p-4 hover-elevate ${badge.earned ? 'backdrop-blur-md bg-background/90 border border-white/20 shadow-xl' : 'bg-muted/50 opacity-60'}`}>
+                  <CardContent className="p-0">
+                    <div className="space-y-3">
+                      <div className={`w-12 h-12 rounded-full mx-auto flex items-center justify-center ${badge.earned ? 'bg-trust/20' : 'bg-muted'}`}>
+                        {badge.earned ? (
+                          <badge.icon className="h-6 w-6 text-trust" />
+                        ) : (
+                          <Lock className="h-6 w-6 text-muted-foreground" />
+                        )}
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-sm">{badge.title}</h3>
+                        <p className="text-xs text-muted-foreground">{badge.description}</p>
+                      </div>
+                      <Badge 
+                        className={badge.earned ? "bg-success text-success-foreground" : "bg-muted text-muted-foreground"}
+                        data-testid={`badge-${index}-status`}
+                      >
+                        {badge.earned ? "Earned" : "Locked"}
+                      </Badge>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           </div>
         </div>
       </section>
