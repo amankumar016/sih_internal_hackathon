@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { 
   X, 
@@ -51,13 +52,25 @@ interface ProgressStep {
 interface AssignedUnit {
   id: string;
   name: string;
-  eta: number; // Changed to seconds for countdown
+  eta: number; // Seconds for countdown
+  etaInitial: number; // Initial ETA for progress calculation
   details: string;
   type: "police" | "rescue" | "medical";
   leadOfficer?: string;
   vehiclePlate?: string;
   status?: string;
   position?: { x: number; y: number };
+  priority: "high" | "medium" | "low";
+  comms: {
+    radio: boolean;
+    gps: boolean;
+  };
+  equipment: {
+    ready: boolean;
+    medKit?: boolean;
+    hydraulic?: boolean;
+    defib?: boolean;
+  };
 }
 
 export default function TrackPanicModal({ isOpen, onClose }: TrackPanicModalProps) {
@@ -67,10 +80,32 @@ export default function TrackPanicModal({ isOpen, onClose }: TrackPanicModalProp
   const [incidentTime] = useState("7:37 PM");
   const [reassuranceMessage, setReassuranceMessage] = useState("Your alert has been received. Help is being coordinated.");
   
+  // Initialize unit ETAs state (will be set after assignedUnits is declared)
+  const [unitETAs, setUnitETAs] = useState<{[key: string]: number}>({});
+  
+  // Initialize unit ETAs from assignedUnits
+  useEffect(() => {
+    const initialETAs: {[key: string]: number} = {};
+    assignedUnits.forEach(unit => {
+      initialETAs[unit.id] = unit.eta;
+    });
+    setUnitETAs(initialETAs);
+  }, []);
+
   // Update time every second for live countdowns
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentTime(Date.now());
+      // Update unit ETAs (countdown)
+      setUnitETAs(prevETAs => {
+        const newETAs = { ...prevETAs };
+        Object.keys(newETAs).forEach(unitId => {
+          if (newETAs[unitId] > 0) {
+            newETAs[unitId] = Math.max(0, newETAs[unitId] - 1);
+          }
+        });
+        return newETAs;
+      });
     }, 1000);
     
     return () => clearInterval(interval);
@@ -130,23 +165,44 @@ export default function TrackPanicModal({ isOpen, onClose }: TrackPanicModalProp
       id: "1",
       name: "Police Unit 12",
       eta: 360, // 6 minutes in seconds
-      details: "Vehicle • 4 pax",
+      etaInitial: 480, // Initial ETA was 8 minutes
+      details: "Patrol Vehicle • 4 Officers",
       type: "police",
-      leadOfficer: "Officer R. Singh",
+      leadOfficer: "Inspector R. Singh (8 years exp.)",
       vehiclePlate: "HP 09 AB 1234",
-      status: "Navigating traffic on MG Road",
-      position: { x: 120, y: 80 }
+      status: "Navigating traffic on MG Road - 2.3km away",
+      position: { x: 120, y: 80 },
+      priority: "high",
+      comms: {
+        radio: true,
+        gps: true
+      },
+      equipment: {
+        ready: true,
+        medKit: true
+      }
     },
     {
       id: "2",
       name: "Rescue Team A", 
       eta: 720, // 12 minutes in seconds
-      details: "Emergency Vehicle • 6 pax",
+      etaInitial: 900, // Initial ETA was 15 minutes
+      details: "Emergency Response • 6 Personnel",
       type: "rescue",
-      leadOfficer: "Team Lead: Amit K.",
+      leadOfficer: "Team Lead: Amit K. (12 years exp.)",
       vehiclePlate: "HP 65 CD 5678",
-      status: "En route via Hadimba Temple Road",
-      position: { x: 200, y: 120 }
+      status: "En route via Hadimba Temple Road - 4.1km away",
+      position: { x: 200, y: 120 },
+      priority: "medium",
+      comms: {
+        radio: true,
+        gps: true
+      },
+      equipment: {
+        ready: true,
+        hydraulic: true,
+        medKit: true
+      }
     }
   ];
 
@@ -157,10 +213,27 @@ export default function TrackPanicModal({ isOpen, onClose }: TrackPanicModalProp
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
-  // Calculate overall ETA from the earliest unit
+  // Calculate overall ETA from the earliest unit (using live data)
   const getOverallETA = () => {
-    const earliestUnit = assignedUnits.reduce((min, unit) => unit.eta < min.eta ? unit : min);
-    return earliestUnit.eta;
+    const activeUnits = assignedUnits.filter(unit => unitETAs[unit.id] > 0);
+    if (activeUnits.length === 0) return 0;
+    const earliestETA = Math.min(...activeUnits.map(unit => unitETAs[unit.id] || unit.eta));
+    return earliestETA;
+  };
+
+  // Get contextual priority based on ETA remaining
+  const getUnitPriority = (unit: AssignedUnit): "high" | "medium" | "low" => {
+    const remainingETA = unitETAs[unit.id] || unit.eta;
+    if (remainingETA <= 300) return "high"; // Less than 5 minutes
+    if (remainingETA <= 600) return "medium"; // Less than 10 minutes
+    return "low";
+  };
+
+  // Calculate progress percentage for each unit
+  const getUnitProgress = (unit: AssignedUnit): number => {
+    const remainingETA = unitETAs[unit.id] || unit.eta;
+    const progressPercent = Math.max(0, ((unit.etaInitial - remainingETA) / unit.etaInitial) * 100);
+    return Math.min(100, progressPercent);
   };
 
   const getStepIcon = (status: string, step?: ProgressStep) => {
@@ -493,58 +566,140 @@ export default function TrackPanicModal({ isOpen, onClose }: TrackPanicModalProp
                   {assignedUnits.map((unit) => (
                     <div 
                       key={unit.id}
-                      className={`p-4 rounded-lg border ${getUnitBackgroundColor(unit.type)}`}
+                      className={`p-5 rounded-lg border-2 ${getUnitBackgroundColor(unit.type)} hover-elevate transition-all duration-200`}
                       data-testid={`unit-${unit.id}`}
+                      style={{
+                        boxShadow: `0 4px 12px ${unit.type === "police" ? "rgba(37, 99, 235, 0.15)" : 
+                                                  unit.type === "rescue" ? "rgba(234, 88, 12, 0.15)" : 
+                                                  "rgba(220, 38, 38, 0.15)"}`
+                      }}
                     >
-                      <div className="flex items-start justify-between mb-3">
+                      {/* Header Section with Priority Badge */}
+                      <div className="flex items-start justify-between mb-4">
                         <div className="flex items-center gap-3">
                           {getUnitIcon(unit.type)}
                           <div>
-                            <p className="font-bold text-lg">{unit.name}</p>
-                            <p className="text-sm text-muted-foreground">{unit.details}</p>
+                            <div className="flex items-center gap-2 mb-1">
+                              <p className="font-bold text-xl">{unit.name}</p>
+                              <Badge 
+                                variant="outline" 
+                                className={`text-xs font-semibold ${
+                                  getUnitPriority(unit) === "high" ? "bg-red-100 text-red-800 border-red-300" :
+                                  getUnitPriority(unit) === "medium" ? "bg-yellow-100 text-yellow-800 border-yellow-300" :
+                                  "bg-green-100 text-green-800 border-green-300"
+                                }`}
+                              >
+                                {getUnitPriority(unit).toUpperCase()} PRIORITY
+                              </Badge>
+                            </div>
+                            <p className="text-sm text-muted-foreground font-medium">{unit.details}</p>
                           </div>
                         </div>
                         <div className="text-right">
-                          <div className="bg-white/80 dark:bg-black/40 px-3 py-1 rounded-full">
-                            <p className="font-bold text-lg text-green-600">
-                              ETA: {formatCountdown(unit.eta)}
+                          <div 
+                            className="bg-gradient-to-r from-green-100 to-green-200 dark:from-green-900/30 dark:to-green-800/30 px-4 py-2 rounded-lg border border-green-300"
+                            style={{
+                              boxShadow: '0 0 15px rgba(34, 197, 94, 0.3)'
+                            }}
+                          >
+                            <p className="text-xs text-green-700 dark:text-green-300 font-medium">ETA</p>
+                            <p className="font-bold text-xl text-green-600 dark:text-green-400">
+                              {formatCountdown(unitETAs[unit.id] || unit.eta)}
                             </p>
                           </div>
                         </div>
                       </div>
-                      
-                      {/* Enhanced Unit Details */}
-                      <div className="space-y-2 text-sm">
-                        <div className="flex items-center gap-2">
-                          <Badge variant="outline" className="text-xs">
-                            {unit.leadOfficer}
-                          </Badge>
-                          <Badge variant="outline" className="text-xs">
-                            Vehicle: {unit.vehiclePlate}
-                          </Badge>
+
+                      {/* Enhanced Responder Information Grid */}
+                      <div className="grid grid-cols-2 gap-3 mb-4">
+                        <div className="bg-white/60 dark:bg-black/20 p-3 rounded-lg">
+                          <p className="text-xs text-muted-foreground font-medium">Lead Officer</p>
+                          <p className="text-sm font-bold">{unit.leadOfficer}</p>
                         </div>
-                        <p className="text-muted-foreground italic">
-                          Status: {unit.status}
-                        </p>
+                        <div className="bg-white/60 dark:bg-black/20 p-3 rounded-lg">
+                          <p className="text-xs text-muted-foreground font-medium">Vehicle Plate</p>
+                          <p className="text-sm font-bold">{unit.vehiclePlate}</p>
+                        </div>
+                      </div>
+
+                      {/* Operational Status with Progress Bar */}
+                      <div className="mb-4">
+                        <div className="flex items-center gap-2 mb-2">
+                          <div className={`w-3 h-3 rounded-full animate-pulse ${
+                            unit.type === "police" ? "bg-blue-500" : 
+                            unit.type === "rescue" ? "bg-orange-500" : "bg-red-500"
+                          }`}></div>
+                          <p className="text-xs text-muted-foreground font-medium">OPERATIONAL STATUS</p>
+                        </div>
+                        <p className="text-sm font-semibold mb-2">{unit.status}</p>
+                        
+                        {/* Dynamic Progress visualization */}
+                        <div className="space-y-2">
+                          <div className="flex justify-between text-xs">
+                            <span>Progress to destination</span>
+                            <span>{Math.round(getUnitProgress(unit))}%</span>
+                          </div>
+                          <Progress 
+                            value={getUnitProgress(unit)} 
+                            className="h-2"
+                            style={{ animation: 'progress-pulse 2s infinite' }}
+                          />
+                        </div>
+                      </div>
+
+                      {/* Dynamic Communication & Equipment Info */}
+                      <div className="grid grid-cols-3 gap-2 mb-4">
+                        <div className="text-center bg-white/40 dark:bg-black/10 p-2 rounded">
+                          <p className="text-xs text-muted-foreground">Radio</p>
+                          <div className="flex items-center justify-center gap-1">
+                            <div className={`w-2 h-2 rounded-full ${unit.comms.radio ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`}></div>
+                            <span className="text-xs font-bold">{unit.comms.radio ? 'ACTIVE' : 'OFFLINE'}</span>
+                          </div>
+                        </div>
+                        <div className="text-center bg-white/40 dark:bg-black/10 p-2 rounded">
+                          <p className="text-xs text-muted-foreground">GPS</p>
+                          <div className="flex items-center justify-center gap-1">
+                            <div className={`w-2 h-2 rounded-full ${unit.comms.gps ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`}></div>
+                            <span className="text-xs font-bold">{unit.comms.gps ? 'LOCKED' : 'SEARCHING'}</span>
+                          </div>
+                        </div>
+                        <div className="text-center bg-white/40 dark:bg-black/10 p-2 rounded">
+                          <p className="text-xs text-muted-foreground">Equipment</p>
+                          <div className="flex items-center justify-center gap-1">
+                            <div className={`w-2 h-2 rounded-full ${unit.equipment.ready ? 'bg-green-500 animate-pulse' : 'bg-yellow-500'}`}></div>
+                            <span className="text-xs font-bold">{unit.equipment.ready ? 'READY' : 'PREP'}</span>
+                          </div>
+                        </div>
                       </div>
                       
-                      <div className="flex gap-2 mt-3">
+                      {/* Enhanced Action Buttons */}
+                      <div className="grid grid-cols-3 gap-2">
                         <Button 
                           size="sm" 
                           variant="outline"
-                          className="flex-1"
+                          className="flex-1 hover:bg-blue-50 hover:border-blue-300"
                           data-testid={`button-contact-${unit.id}`}
                         >
                           <Phone className="w-3 h-3 mr-1" />
-                          Contact
+                          Call
                         </Button>
                         <Button 
                           size="sm" 
                           variant="outline"
+                          className="flex-1 hover:bg-green-50 hover:border-green-300"
                           data-testid={`button-track-${unit.id}`}
                         >
                           <Eye className="w-3 h-3 mr-1" />
                           Track
+                        </Button>
+                        <Button 
+                          size="sm" 
+                          variant="outline"
+                          className="flex-1 hover:bg-purple-50 hover:border-purple-300"
+                          data-testid={`button-message-${unit.id}`}
+                        >
+                          <FileText className="w-3 h-3 mr-1" />
+                          Msg
                         </Button>
                       </div>
                     </div>
