@@ -62,7 +62,11 @@ export default function SaarthiAI() {
   const [isAnimating, setIsAnimating] = useState(false);
   const [selectedScenario, setSelectedScenario] = useState("tourist-peak");
   const [showParallelModal, setShowParallelModal] = useState(false);
+  const [currentTrailPath, setCurrentTrailPath] = useState("");
+  const [parallelSimHours, setParallelSimHours] = useState(0);
+  const [parallelSimRunning, setParallelSimRunning] = useState(false);
   const animationInterval = useRef<NodeJS.Timeout | null>(null);
+  const parallelAnimationInterval = useRef<NodeJS.Timeout | null>(null);
   const { toast } = useToast();
 
   // Mock data sources - todo: remove mock functionality
@@ -213,11 +217,43 @@ export default function SaarthiAI() {
     setIsAnimating(true);
     setHourSlider(0);
     
-    // Animate slider from 0 to 4 over 5-8 seconds
+    // Generate random trail path
+    const generateRandomTrail = () => {
+      const points = [];
+      const numPoints = Math.floor(Math.random() * 4) + 4; // 4-7 points
+      
+      for (let i = 0; i < numPoints; i++) {
+        const x = (i / (numPoints - 1)) * 400 + 50; // Distribute along width
+        const y = Math.random() * 200 + 100; // Random height
+        points.push(`${x} ${y}`);
+      }
+      
+      // Create smooth curve using quadratic bezier
+      let path = `M ${points[0]}`;
+      for (let i = 1; i < points.length - 1; i++) {
+        const [x1, y1] = points[i - 1].split(' ').map(Number);
+        const [x2, y2] = points[i].split(' ').map(Number);
+        const [x3, y3] = points[i + 1].split(' ').map(Number);
+        
+        const cpx = x2;
+        const cpy = y2;
+        const endx = (x2 + x3) / 2;
+        const endy = (y2 + y3) / 2;
+        
+        path += ` Q ${cpx} ${cpy} ${endx} ${endy}`;
+      }
+      path += ` L ${points[points.length - 1]}`;
+      
+      return path;
+    };
+    
+    setCurrentTrailPath(generateRandomTrail());
+    
+    // Animate slider from 0 to 4 over 8-12 seconds for more realistic simulation
     let progress = 0;
-    const duration = 6000; // 6 seconds
+    const duration = 10000; // 10 seconds
     animationInterval.current = setInterval(() => {
-      progress += 100; // 60fps
+      progress += 100;
       const currentHour = (progress / duration) * 4;
       
       if (currentHour >= 4) {
@@ -229,7 +265,7 @@ export default function SaarthiAI() {
         }
         toast({
           title: "Simulation Complete",
-          description: "Future risk simulation completed successfully",
+          description: "Future risk simulation completed successfully - new trail pattern generated",
           duration: 3000,
         });
       } else {
@@ -247,11 +283,62 @@ export default function SaarthiAI() {
     setIsAnimating(false);
   };
 
-  // Cleanup interval on unmount
+  // Parallel world simulation functions
+  const startParallelSimulation = () => {
+    if (parallelSimRunning) return;
+    
+    setParallelSimRunning(true);
+    setParallelSimHours(0);
+    
+    // Run simulation for 8+ hours with updates every 30 seconds (simulated)
+    parallelAnimationInterval.current = setInterval(() => {
+      setParallelSimHours(prev => {
+        const newHours = prev + 0.5; // Increment by 30 minutes each update
+        if (newHours >= 8) {
+          setParallelSimRunning(false);
+          if (parallelAnimationInterval.current) {
+            clearInterval(parallelAnimationInterval.current);
+            parallelAnimationInterval.current = null;
+          }
+          toast({
+            title: "Parallel World Simulation Complete",
+            description: "8-hour comprehensive analysis completed with 576 data points",
+            duration: 4000,
+          });
+          return 8;
+        }
+        return newHours;
+      });
+    }, 2000); // Update every 2 seconds for demo (represents 30 min intervals)
+    
+    toast({
+      title: "Parallel World Simulation Started",
+      description: "Running 8-hour comprehensive analysis with dynamic trail generation",
+      duration: 3000,
+    });
+  };
+  
+  const stopParallelSimulation = () => {
+    setParallelSimRunning(false);
+    if (parallelAnimationInterval.current) {
+      clearInterval(parallelAnimationInterval.current);
+      parallelAnimationInterval.current = null;
+    }
+    toast({
+      title: "Parallel Simulation Stopped",
+      description: `Stopped at ${parallelSimHours.toFixed(1)} hours - ${Math.floor(parallelSimHours * 72)} data points analyzed`,
+      duration: 3000,
+    });
+  };
+
+  // Cleanup intervals on unmount
   useEffect(() => {
     return () => {
       if (animationInterval.current) {
         clearInterval(animationInterval.current);
+      }
+      if (parallelAnimationInterval.current) {
+        clearInterval(parallelAnimationInterval.current);
       }
     };
   }, []);
@@ -743,27 +830,103 @@ export default function SaarthiAI() {
                   </div>
                 </div>
 
-                {/* Animated Trail - shows during simulation */}
-                {isAnimating && (
+                {/* Enhanced Multi-Layer Animated Trails with Increased Activity */}
+                {isAnimating && currentTrailPath && (
                   <svg className="absolute inset-0 w-full h-full pointer-events-none">
+                    {/* Primary Trail - Main Path */}
                     <path
-                      d="M 50 300 Q 150 200 250 250 Q 350 300 450 200"
+                      d={currentTrailPath}
                       stroke="url(#gradient)"
-                      strokeWidth="4"
+                      strokeWidth="5"
+                      fill="none"
+                      strokeDasharray="1200"
+                      strokeDashoffset="1200"
+                      className="drop-shadow-lg"
+                      style={{
+                        animation: `drawPath 10s ease-in-out forwards`,
+                        filter: 'drop-shadow(0 0 8px rgba(16, 185, 129, 0.5))'
+                      }}
+                    />
+                    
+                    {/* Secondary Activity Trail - Parallel Routes */}
+                    <path
+                      d={currentTrailPath}
+                      stroke="url(#gradient2)"
+                      strokeWidth="3"
                       fill="none"
                       strokeDasharray="800"
                       strokeDashoffset="800"
-                      className="animate-pulse"
+                      opacity="0.7"
                       style={{
-                        animation: `drawPath 6s ease-in-out forwards`
+                        animation: `drawPath 8s ease-in-out forwards 1.5s`,
+                        transform: 'translate(15px, -10px)'
                       }}
                     />
+                    
+                    {/* Tertiary Activity Trail - Tourist Movement */}
+                    <path
+                      d={currentTrailPath}
+                      stroke="url(#gradient3)"
+                      strokeWidth="2"
+                      fill="none"
+                      strokeDasharray="600"
+                      strokeDashoffset="600"
+                      opacity="0.5"
+                      style={{
+                        animation: `drawPath 12s ease-in-out forwards 0.5s`,
+                        transform: 'translate(-10px, 15px)'
+                      }}
+                    />
+                    
+                    {/* Activity Pulse Points - Hotspots */}
+                    <circle cx="150" cy="200" r="8" fill="url(#pulseGradient)" opacity="0.8">
+                      <animate attributeName="r" values="4;12;4" dur="3s" repeatCount="indefinite"/>
+                      <animate attributeName="opacity" values="0.8;0.3;0.8" dur="3s" repeatCount="indefinite"/>
+                    </circle>
+                    <circle cx="300" cy="180" r="6" fill="url(#pulseGradient2)" opacity="0.6">
+                      <animate attributeName="r" values="3;10;3" dur="4s" repeatCount="indefinite"/>
+                      <animate attributeName="opacity" values="0.6;0.2;0.6" dur="4s" repeatCount="indefinite"/>
+                    </circle>
+                    <circle cx="220" cy="250" r="5" fill="url(#pulseGradient3)" opacity="0.7">
+                      <animate attributeName="r" values="2;8;2" dur="2.5s" repeatCount="indefinite"/>
+                      <animate attributeName="opacity" values="0.7;0.2;0.7" dur="2.5s" repeatCount="indefinite"/>
+                    </circle>
+                    
                     <defs>
+                      {/* Enhanced Multi-Color Gradients */}
                       <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
                         <stop offset="0%" stopColor="#10b981" />
-                        <stop offset="50%" stopColor="#f59e0b" />
-                        <stop offset="100%" stopColor="#ef4444" />
+                        <stop offset="20%" stopColor="#3b82f6" />
+                        <stop offset="40%" stopColor="#f59e0b" />
+                        <stop offset="60%" stopColor="#8b5cf6" />
+                        <stop offset="80%" stopColor="#ef4444" />
+                        <stop offset="100%" stopColor="#06b6d4" />
                       </linearGradient>
+                      <linearGradient id="gradient2" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stopColor="#06b6d4" />
+                        <stop offset="33%" stopColor="#84cc16" />
+                        <stop offset="66%" stopColor="#f97316" />
+                        <stop offset="100%" stopColor="#8b5cf6" />
+                      </linearGradient>
+                      <linearGradient id="gradient3" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stopColor="#fbbf24" />
+                        <stop offset="50%" stopColor="#f472b6" />
+                        <stop offset="100%" stopColor="#a78bfa" />
+                      </linearGradient>
+                      
+                      {/* Pulse Point Gradients */}
+                      <radialGradient id="pulseGradient" cx="50%" cy="50%" r="50%">
+                        <stop offset="0%" stopColor="#ef4444" stopOpacity="1" />
+                        <stop offset="100%" stopColor="#ef4444" stopOpacity="0" />
+                      </radialGradient>
+                      <radialGradient id="pulseGradient2" cx="50%" cy="50%" r="50%">
+                        <stop offset="0%" stopColor="#f59e0b" stopOpacity="1" />
+                        <stop offset="100%" stopColor="#f59e0b" stopOpacity="0" />
+                      </radialGradient>
+                      <radialGradient id="pulseGradient3" cx="50%" cy="50%" r="50%">
+                        <stop offset="0%" stopColor="#10b981" stopOpacity="1" />
+                        <stop offset="100%" stopColor="#10b981" stopOpacity="0" />
+                      </radialGradient>
                     </defs>
                   </svg>
                 )}
@@ -1094,25 +1257,65 @@ export default function SaarthiAI() {
                 <p className="text-xs text-muted-foreground mt-1">Interactive 3D simulation environment</p>
               </div>
               
-              <div className="flex gap-2">
-                <Button className="flex-1" data-testid="button-start-parallel-sim">
-                  <Play className="w-4 h-4 mr-2" />
-                  Start Simulation
-                </Button>
-                <Button variant="outline" className="flex-1" data-testid="button-stop-parallel-sim">
-                  <Pause className="w-4 h-4 mr-2" />
-                  Stop Simulation
-                </Button>
+              <div className="space-y-3">
+                {parallelSimRunning && (
+                  <div className="text-center p-3 bg-trust/10 rounded-lg border">
+                    <p className="font-medium text-trust">Simulation Running</p>
+                    <p className="text-sm text-muted-foreground">
+                      {parallelSimHours.toFixed(1)} / 8.0 hours
+                    </p>
+                    <div className="w-full h-2 bg-muted rounded-full mt-2 overflow-hidden">
+                      <div 
+                        className="h-full bg-trust transition-all duration-500" 
+                        style={{ width: `${(parallelSimHours / 8) * 100}%` }}
+                      />
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      {Math.floor(parallelSimHours * 72)} data points analyzed
+                    </p>
+                  </div>
+                )}
+                
+                <div className="flex gap-2">
+                  <Button 
+                    className="flex-1" 
+                    onClick={startParallelSimulation}
+                    disabled={parallelSimRunning}
+                    data-testid="button-start-parallel-sim"
+                  >
+                    <Play className="w-4 h-4 mr-2" />
+                    {parallelSimRunning ? 'Running...' : 'Start 8-Hour Simulation'}
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    className="flex-1" 
+                    onClick={stopParallelSimulation}
+                    disabled={!parallelSimRunning}
+                    data-testid="button-stop-parallel-sim"
+                  >
+                    <Pause className="w-4 h-4 mr-2" />
+                    Stop Simulation
+                  </Button>
+                </div>
               </div>
             </div>
             
             {/* Right Column - Analysis */}
             <div className="space-y-4">
-              <h4 className="font-medium">Simulation Analysis</h4>
+              <div className="space-y-2">
+                <h4 className="font-medium">Simulation Analysis</h4>
+                {parallelSimRunning && (
+                  <div className="text-xs text-trust font-medium">
+                    🔄 Live simulation running - data updates every 30 minutes
+                  </div>
+                )}
+              </div>
               <div className="space-y-3">
                 <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
                   <span className="text-sm">Crowd Density</span>
-                  <Badge className="bg-warning text-warning-foreground">High</Badge>
+                  <Badge className={`${parallelSimRunning && parallelSimHours > 2 ? 'bg-success text-success-foreground' : 'bg-warning text-warning-foreground'}`}>
+                    {parallelSimRunning && parallelSimHours > 2 ? 'Moderate' : 'High'}
+                  </Badge>
                 </div>
                 <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
                   <span className="text-sm">Community Trust</span>
@@ -1120,15 +1323,27 @@ export default function SaarthiAI() {
                 </div>
                 <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
                   <span className="text-sm">CCTV Coverage</span>
-                  <Badge className="bg-trust text-trust-foreground">78%</Badge>
+                  <Badge className="bg-trust text-trust-foreground">
+                    {parallelSimRunning ? `${Math.min(78 + Math.floor(parallelSimHours * 2), 95)}%` : '78%'}
+                  </Badge>
                 </div>
                 <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
                   <span className="text-sm">Emergency Response</span>
-                  <Badge className="bg-success text-success-foreground">Ready</Badge>
+                  <Badge className="bg-success text-success-foreground">
+                    {parallelSimRunning && parallelSimHours > 1 ? 'Optimized' : 'Ready'}
+                  </Badge>
                 </div>
                 <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
                   <span className="text-sm">Weather Conditions</span>
-                  <Badge className="bg-success text-success-foreground">Clear</Badge>
+                  <Badge className={`${parallelSimRunning && parallelSimHours > 4 ? 'bg-warning text-warning-foreground' : 'bg-success text-success-foreground'}`}>
+                    {parallelSimRunning && parallelSimHours > 4 ? 'Changing' : 'Clear'}
+                  </Badge>
+                </div>
+                <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
+                  <span className="text-sm">Data Points</span>
+                  <Badge className="bg-trust text-trust-foreground">
+                    {parallelSimRunning ? Math.floor(parallelSimHours * 72) : '0'}
+                  </Badge>
                 </div>
               </div>
             </div>
