@@ -28,7 +28,14 @@ import {
   AlertTriangle,
   Navigation,
   Eye,
-  Activity
+  Activity,
+  Zap,
+  Radar,
+  Radio,
+  ShieldCheck,
+  HeartHandshake,
+  CarFront,
+  TruckIcon
 } from "lucide-react";
 import manaliMapImg from '@assets/image_1758117701636.png';
 
@@ -298,21 +305,23 @@ export default function TrackPanicModal({ isOpen, onClose }: TrackPanicModalProp
         );
       case "in-progress":
         const icon = step?.title?.includes("Police") ? 
-          <Siren className="w-4 h-4 text-blue-600" style={{ animation: 'flash 1.5s infinite' }} /> :
+          <ShieldCheck className="w-4 h-4 text-blue-600" style={{ animation: 'flash 1.5s infinite' }} /> :
           step?.title?.includes("Medic") ?
-          <Heart className="w-4 h-4 text-red-600" style={{ animation: 'heartbeat 1.8s infinite' }} /> :
+          <HeartHandshake className="w-4 h-4 text-red-600" style={{ animation: 'heartbeat 1.8s infinite' }} /> :
           step?.title?.includes("Rescue") ?
-          <Shield className="w-4 h-4 text-orange-600" style={{ animation: 'emergency-pulse 2s infinite' }} /> :
-          <Clock className="w-4 h-4 text-blue-600" style={{ animation: 'tick-pulse 2s infinite' }} />;
+          <Zap className="w-4 h-4 text-orange-600" style={{ animation: 'emergency-pulse 2s infinite' }} /> :
+          step?.title?.includes("FIR") || step?.title?.includes("filed") ?
+          <FileText className="w-4 h-4 text-purple-600" style={{ animation: 'tick-pulse 2s infinite' }} /> :
+          <Radio className="w-4 h-4 text-blue-600" style={{ animation: 'tick-pulse 2s infinite' }} />;
         
         return (
           <div className="relative">
             {/* Enhanced active status indicator */}
             <div 
-              className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center border-2 border-white shadow-lg"
+              className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center border-2 border-white shadow-lg relative overflow-visible"
               style={{
                 animation: 'active-status-pulse 2s infinite',
-                boxShadow: '0 0 20px rgba(59, 130, 246, 0.8)'
+                boxShadow: '0 0 25px rgba(59, 130, 246, 0.9), inset 0 0 8px rgba(255,255,255,0.2)'
               }}
             >
               {icon}
@@ -364,13 +373,13 @@ export default function TrackPanicModal({ isOpen, onClose }: TrackPanicModalProp
     const iconElement = () => {
       switch (type) {
         case "police":
-          return <Car className={`${baseClasses} text-white`} />;
+          return <ShieldCheck className={`${baseClasses} text-white`} style={{ animation: 'flash 2s infinite' }} />;
         case "rescue":
-          return <Truck className={`${baseClasses} text-white`} />;
+          return <Zap className={`${baseClasses} text-white`} style={{ animation: 'emergency-pulse 1.8s infinite' }} />;
         case "medical":
-          return <Shield className={`${baseClasses} text-white`} />;
+          return <HeartHandshake className={`${baseClasses} text-white`} style={{ animation: 'heartbeat 2s infinite' }} />;
         default:
-          return <Car className={`${baseClasses} text-white`} />;
+          return <ShieldCheck className={`${baseClasses} text-white`} />;
       }
     };
 
@@ -378,14 +387,27 @@ export default function TrackPanicModal({ isOpen, onClose }: TrackPanicModalProp
                    type === "rescue" ? "bg-orange-600" : 
                    "bg-red-600";
     
+    const glowColor = type === "police" ? "rgba(37, 99, 235, 0.6)" : 
+                     type === "rescue" ? "rgba(234, 88, 12, 0.6)" : 
+                     "rgba(220, 38, 38, 0.6)";
+    
     return (
-      <div className={`p-2 ${bgColor} rounded-full shadow-lg`}
-           style={{ 
-             boxShadow: `0 0 15px ${type === "police" ? "rgba(37, 99, 235, 0.4)" : 
-                                    type === "rescue" ? "rgba(234, 88, 12, 0.4)" : 
-                                    "rgba(220, 38, 38, 0.4)"}` 
-           }}>
+      <div 
+        className={`p-2 ${bgColor} rounded-full shadow-lg relative overflow-visible`}
+        style={{ 
+          boxShadow: `0 0 20px ${glowColor}, inset 0 0 10px rgba(255,255,255,0.1)`,
+          animation: 'pulse-glow 3s infinite'
+        }}
+      >
         {iconElement()}
+        {/* Enhanced glow ring */}
+        <div 
+          className="absolute inset-0 rounded-full border-2 border-white/30"
+          style={{ 
+            boxShadow: `0 0 25px ${glowColor}`,
+            animation: 'directional-pulse 2.5s infinite' 
+          }}
+        />
       </div>
     );
   };
@@ -632,15 +654,30 @@ export default function TrackPanicModal({ isOpen, onClose }: TrackPanicModalProp
                         </div>
                         <div className="text-right">
                           <div 
-                            className="bg-gradient-to-r from-green-100 to-green-200 dark:from-green-900/30 dark:to-green-800/30 px-4 py-2 rounded-lg border border-green-300"
+                            className="bg-gradient-to-r from-green-100 to-green-200 dark:from-green-900/30 dark:to-green-800/30 px-4 py-2 rounded-lg border border-green-300 relative overflow-visible"
                             style={{
-                              boxShadow: '0 0 15px rgba(34, 197, 94, 0.3)'
+                              boxShadow: '0 0 20px rgba(34, 197, 94, 0.4), inset 0 0 10px rgba(34, 197, 94, 0.1)',
+                              animation: 'pulse-glow 3s infinite'
                             }}
                           >
                             <p className="text-xs text-green-700 dark:text-green-300 font-medium">ETA</p>
-                            <p className="font-bold text-xl text-green-600 dark:text-green-400">
+                            <p 
+                              className="font-bold text-xl text-green-600 dark:text-green-400"
+                              style={{
+                                textShadow: '0 0 10px rgba(34, 197, 94, 0.3)',
+                                animation: 'glow-yellow 2.5s infinite alternate'
+                              }}
+                            >
                               {formatCountdown(unitETAs[unit.id] || unit.eta)}
                             </p>
+                            {/* Enhanced glow ring */}
+                            <div 
+                              className="absolute inset-0 rounded-lg border-2 border-green-300/40"
+                              style={{ 
+                                boxShadow: '0 0 15px rgba(34, 197, 94, 0.2)',
+                                animation: 'directional-pulse 2s infinite' 
+                              }}
+                            />
                           </div>
                         </div>
                       </div>
