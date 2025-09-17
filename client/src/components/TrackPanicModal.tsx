@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { useToast } from "@/hooks/use-toast";
 import { 
   X, 
   MapPin, 
@@ -82,6 +83,8 @@ interface AssignedUnit {
 }
 
 export default function TrackPanicModal({ isOpen, onClose }: TrackPanicModalProps) {
+  const { toast } = useToast();
+  
   // State for live countdown timers
   const [currentTime, setCurrentTime] = useState(Date.now());
   const [showWhatToDo, setShowWhatToDo] = useState(false);
@@ -278,6 +281,41 @@ export default function TrackPanicModal({ isOpen, onClose }: TrackPanicModalProp
     return Math.min(100, progressPercent);
   };
 
+  // Share Live Status functionality
+  const handleShareLiveStatus = async () => {
+    const shareData = {
+      title: "Emergency Response Status - GUARD",
+      text: `Emergency response is active. Report ID: REP-LGRRQOWA. ETA: ${formatCountdown(getOverallETA())}. Help is on the way.`,
+      url: window.location.href
+    };
+
+    try {
+      // Try Web Share API first (mobile/modern browsers)
+      if (navigator.share) {
+        await navigator.share(shareData);
+        toast({
+          title: "Status shared successfully",
+          description: "Emergency response status has been shared.",
+        });
+      } else {
+        // Fallback to clipboard
+        await navigator.clipboard.writeText(`${shareData.text} ${shareData.url}`);
+        toast({
+          title: "Link copied to clipboard",
+          description: "Emergency response status link has been copied. You can now share it.",
+        });
+      }
+    } catch (error) {
+      // Handle errors gracefully
+      console.error('Share failed:', error);
+      toast({
+        title: "Share failed",
+        description: "Unable to share status. Please try again.",
+        variant: "destructive"
+      });
+    }
+  };
+
   const getStepIcon = (status: string, step?: ProgressStep) => {
     switch (status) {
       case "completed":
@@ -442,6 +480,7 @@ export default function TrackPanicModal({ isOpen, onClose }: TrackPanicModalProp
               variant="outline"
               size="sm"
               className="bg-blue-600 text-white border-blue-600 hover:bg-blue-700"
+              onClick={handleShareLiveStatus}
               data-testid="button-share-status"
             >
               <Share2 className="w-4 h-4 mr-2" />
