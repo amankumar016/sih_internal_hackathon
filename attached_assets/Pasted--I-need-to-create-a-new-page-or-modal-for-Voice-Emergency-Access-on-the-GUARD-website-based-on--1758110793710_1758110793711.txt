@@ -1,0 +1,87 @@
+"I need to create a new page or modal for 'Voice Emergency Access' on the 'GUARD' website, based on the provided UI screenshots.
+
+Part 1: HTML Structure (index.html - or a new HTML file if it's a separate page/modal)
+
+Main Container: Create a central container for the entire feature. This container should be centered horizontally on the page and have the global 'Glassmorphism' card style (semi-transparent white background, blur, thin white border, soft shadow, rounded corners).
+
+Set the main title: <h1>Voice Emergency Access</h1>
+
+Add a tagline below it: <p>Speak your emergency in any language</p>
+
+'Select Language' Section:
+
+Inside the main container, create another div for language selection, also applying the 'Glassmorphism' card style.
+
+Add a heading: <h3><span style="font-family: 'Font Awesome 5 Free'; font-weight: 900;">&#xf12d;</span> Select Language</h3> (using a mock icon for 'translate' or 'language').
+
+Create a grid or row of buttons for languages.
+
+English: Primary Blue button style (#4F46E5 background, white text, 8px rounded corners).
+
+Hindi (हिन्दी): Secondary style (white background, Neutral-600 text, Neutral-200 border, 8px rounded corners).
+
+Assamese (অসমীয়া): Secondary style.
+
+Bengali (বাংলা): Secondary style.
+
+Gujarati (ગુજરાતી): Secondary style.
+
+Tamil (தமிழ்): Secondary style.
+
+(Optional: If there's space, add more languages from the full list provided previously, using the secondary button style).
+
+'Voice Input' Section:
+
+Below the language section, create another div for voice input, again with the 'Glassmorphism' card style.
+
+Add a heading: <h3>Voice Input</h3>
+
+Microphone Button: Create a large, circular, purple button in the center of this section.
+
+It should contain a microphone icon (<span style="font-family: 'Font Awesome 5 Free'; font-weight: 900;">&#xf130;</span> or similar).
+
+Add text below it: Tap to speak.
+
+Action Buttons: Below the microphone button, add two full-width buttons:
+
+'Send Voice Emergency': Use the Danger Red (#DC2626) button style, white text, 8px rounded corners. Include a phone icon (<span style="font-family: 'Font Awesome 5 Free'; font-weight: 900;">&#xf095;</span>).
+
+'Call Emergency Helpline': Use the secondary button style (white background, Neutral-600 text, Neutral-200 border, 8px rounded corners).
+
+Offline Note:
+
+Below all the main cards, create a separate div with a Warning Yellow (#FBBF24) background, Neutral-900 text, and 8px rounded corners.
+
+Add bold text: <strong>Note:</strong> This service works offline via SMS when internet is unavailable.
+
+Part 2: CSS Styling (style.css)
+
+Apply Global Styles: Ensure the Glassmorphism effect, button styles (primary, destructive, secondary), typography (Inter), and color palette (Primary Blue, Danger Red, Warning Yellow, Neutral-900, Neutral-600, Neutral-200) are applied consistently to all elements as defined in the global design system prompt.
+
+Layout:
+
+Center the main container horizontally.
+
+Use CSS Grid or Flexbox for the language buttons to arrange them nicely.
+
+Center the microphone button and its text vertically and horizontally within its section.
+
+Microphone Button: Define a circular shape, purple background, centered icon, and Tap to speak text.
+
+Offline Note: Style the div with the yellow background and appropriate padding.
+
+Part 3: JavaScript (Optional, script.js)
+
+No explicit functionality is required for this UI mock, but if it's a modal, ensure there's JavaScript to show/hide it when the 'Voice-Text Emergency Access' button is clicked from the login page or tourist view.
+
+Important Instructions for the AI:
+
+Prioritize existing global styles: Reuse CSS classes for buttons, cards, and typography already defined in style.css if possible.
+
+Use appropriate HTML semantics.
+
+Ensure responsiveness: The layout should adapt well to different screen sizes, especially mobile.
+
+For icons, use Font Awesome (or a similar iconic font/SVG system already in use).
+
+Integrate this as a new, standalone HTML file (e.g., voice-emergency.html) if it's a separate page, or as a hidden modal element within index.html if it's meant to pop up. Please specify which approach you're taking."

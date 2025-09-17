@@ -6,6 +6,7 @@ import DigitalIDCard from "@/components/DigitalIDCard";
 import SaarthiCard from "@/components/SaarthiCard";
 import InteractiveMap from "@/components/InteractiveMap";
 import FeatureGrid from "@/components/FeatureGrid";
+import VoiceEmergency from "@/components/VoiceEmergency";
 import PanicButton from "@/components/PanicButton";
 
 export default function Dashboard() {
@@ -119,6 +120,11 @@ export default function Dashboard() {
               </CardContent>
             </Card>
           </div>
+        </div>
+        
+        {/* Voice Emergency Section */}
+        <div className="mt-12">
+          <VoiceEmergency />
         </div>
       </main>
 
