@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Shield, Phone, Mail, User, CreditCard } from "lucide-react";
+import { Shield, Phone, Mail, User, CreditCard, ArrowRight } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { useToast } from "@/hooks/use-toast";
 
@@ -108,7 +108,7 @@ export default function Login() {
             </div>
           </div>
           <div>
-            <h1 className="text-2xl font-bold">Sign Up</h1>
+            <h1 className="text-2xl font-bold">Login</h1>
             <p className="text-muted-foreground">Smart Tourist Safety Platform</p>
           </div>
         </div>
@@ -139,11 +139,11 @@ export default function Login() {
         </Card>
 
         {/* Sign Up Form */}
-        <Card className="bg-card border-card-border">
-          <CardHeader className="bg-primary/5 border-b border-primary/10">
-            <CardTitle className="text-foreground">Sign Up</CardTitle>
+        <Card className="bg-card border-card-border shadow-lg">
+          <CardHeader className="bg-primary/10 border-b border-primary/20">
+            <CardTitle className="text-foreground font-bold text-xl">Login</CardTitle>
           </CardHeader>
-          <CardContent className="p-6">
+          <CardContent className="p-6 bg-card/95">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
               <TabsList className="grid w-full grid-cols-2 mb-6">
                 <TabsTrigger value="tourist" className="flex items-center gap-2">
@@ -158,45 +158,45 @@ export default function Login() {
               
               <TabsContent value="tourist">
                 <form onSubmit={touristForm.handleSubmit(onTouristSubmit)} className="space-y-4">
-                  <div>
-                    <Label htmlFor="tourist-username" className="text-foreground">Username</Label>
+                  <div className="space-y-2">
+                    <Label htmlFor="tourist-username" className="text-foreground font-semibold text-sm">Username</Label>
                     <Input
                       id="tourist-username"
                       {...touristForm.register("username")}
                       placeholder="Enter your username"
-                      className="bg-background text-foreground"
+                      className="bg-background text-foreground border-2 border-input focus:border-primary/50 h-11"
                       data-testid="input-tourist-username"
                     />
                     {touristForm.formState.errors.username && (
-                      <p className="text-sm text-destructive mt-1">{touristForm.formState.errors.username.message}</p>
+                      <p className="text-sm text-destructive mt-1 font-medium">{touristForm.formState.errors.username.message}</p>
                     )}
                   </div>
                   
-                  <div>
-                    <Label htmlFor="tourist-contact" className="text-foreground">Contact Number</Label>
+                  <div className="space-y-2">
+                    <Label htmlFor="tourist-contact" className="text-foreground font-semibold text-sm">Contact Number</Label>
                     <Input
                       id="tourist-contact"
                       {...touristForm.register("contactNumber")}
                       placeholder="Enter your mobile number"
-                      className="bg-background text-foreground"
+                      className="bg-background text-foreground border-2 border-input focus:border-primary/50 h-11"
                       data-testid="input-tourist-contact"
                     />
                     {touristForm.formState.errors.contactNumber && (
-                      <p className="text-sm text-destructive mt-1">{touristForm.formState.errors.contactNumber.message}</p>
+                      <p className="text-sm text-destructive mt-1 font-medium">{touristForm.formState.errors.contactNumber.message}</p>
                     )}
                   </div>
                   
-                  <div>
-                    <Label htmlFor="tourist-emergency" className="text-foreground">Emergency Contact</Label>
+                  <div className="space-y-2">
+                    <Label htmlFor="tourist-emergency" className="text-foreground font-semibold text-sm">Emergency Contact</Label>
                     <Input
                       id="tourist-emergency"
                       {...touristForm.register("emergencyContact")}
                       placeholder="Enter emergency contact number"
-                      className="bg-background text-foreground"
+                      className="bg-background text-foreground border-2 border-input focus:border-primary/50 h-11"
                       data-testid="input-tourist-emergency"
                     />
                     {touristForm.formState.errors.emergencyContact && (
-                      <p className="text-sm text-destructive mt-1">{touristForm.formState.errors.emergencyContact.message}</p>
+                      <p className="text-sm text-destructive mt-1 font-medium">{touristForm.formState.errors.emergencyContact.message}</p>
                     )}
                   </div>
                   
@@ -213,45 +213,45 @@ export default function Login() {
               
               <TabsContent value="authority">
                 <form onSubmit={authorityForm.handleSubmit(onAuthoritySubmit)} className="space-y-4">
-                  <div>
-                    <Label htmlFor="authority-username" className="text-foreground">Username</Label>
+                  <div className="space-y-2">
+                    <Label htmlFor="authority-username" className="text-foreground font-semibold text-sm">Username</Label>
                     <Input
                       id="authority-username"
                       {...authorityForm.register("username")}
                       placeholder="Enter your username"
-                      className="bg-background text-foreground"
+                      className="bg-background text-foreground border-2 border-input focus:border-primary/50 h-11"
                       data-testid="input-authority-username"
                     />
                     {authorityForm.formState.errors.username && (
-                      <p className="text-sm text-destructive mt-1">{authorityForm.formState.errors.username.message}</p>
+                      <p className="text-sm text-destructive mt-1 font-medium">{authorityForm.formState.errors.username.message}</p>
                     )}
                   </div>
                   
-                  <div>
-                    <Label htmlFor="authority-contact" className="text-foreground">Contact Number</Label>
+                  <div className="space-y-2">
+                    <Label htmlFor="authority-contact" className="text-foreground font-semibold text-sm">Contact Number</Label>
                     <Input
                       id="authority-contact"
                       {...authorityForm.register("contactNumber")}
                       placeholder="Enter your mobile number"
-                      className="bg-background text-foreground"
+                      className="bg-background text-foreground border-2 border-input focus:border-primary/50 h-11"
                       data-testid="input-authority-contact"
                     />
                     {authorityForm.formState.errors.contactNumber && (
-                      <p className="text-sm text-destructive mt-1">{authorityForm.formState.errors.contactNumber.message}</p>
+                      <p className="text-sm text-destructive mt-1 font-medium">{authorityForm.formState.errors.contactNumber.message}</p>
                     )}
                   </div>
                   
-                  <div>
-                    <Label htmlFor="authority-identity" className="text-foreground">Identity Number</Label>
+                  <div className="space-y-2">
+                    <Label htmlFor="authority-identity" className="text-foreground font-semibold text-sm">Identity Number</Label>
                     <Input
                       id="authority-identity"
                       {...authorityForm.register("identityNumber")}
                       placeholder="Enter your identity number"
-                      className="bg-background text-foreground"
+                      className="bg-background text-foreground border-2 border-input focus:border-primary/50 h-11"
                       data-testid="input-authority-identity"
                     />
                     {authorityForm.formState.errors.identityNumber && (
-                      <p className="text-sm text-destructive mt-1">{authorityForm.formState.errors.identityNumber.message}</p>
+                      <p className="text-sm text-destructive mt-1 font-medium">{authorityForm.formState.errors.identityNumber.message}</p>
                     )}
                   </div>
                   
@@ -269,6 +269,26 @@ export default function Login() {
             
             <div className="mt-6 space-y-4">
               <Separator />
+              
+              {/* Quick Access Button (formerly Get Started from Hero) */}
+              <div className="text-center space-y-3">
+                <Button
+                  size="lg" 
+                  className="w-full bg-trust text-trust-foreground hover:bg-trust/90 py-3 text-lg font-semibold"
+                  onClick={() => {
+                    setActiveTab("tourist");
+                    setTimeout(() => {
+                      const usernameInput = document.getElementById("tourist-username");
+                      if (usernameInput) usernameInput.focus();
+                    }, 100);
+                  }}
+                  data-testid="button-quick-tourist-access"
+                >
+                  Continue as Tourist
+                  <ArrowRight className="w-5 h-5 ml-2" />
+                </Button>
+              </div>
+              
               <div className="text-center space-y-3">
                 <p className="text-sm text-muted-foreground">
                   Already have an account?

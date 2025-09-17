@@ -76,19 +76,7 @@ export default function HeroSection() {
           </CardContent>
         </Card>
 
-        {/* Get Started */}
-        <div className="mt-8">
-          <Link href="/registration">
-            <Button 
-              size="lg" 
-              className="bg-trust text-trust-foreground hover:bg-trust/90 px-8 py-3 text-lg"
-              data-testid="button-get-started"
-            >
-              Get Started
-              <ArrowRight className="w-5 h-5 ml-2" />
-            </Button>
-          </Link>
-        </div>
+        {/* Get Started button moved to login page as "Tourist Login" */}
       </div>
     </section>
   );
