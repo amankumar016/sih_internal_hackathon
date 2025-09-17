@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -26,7 +26,14 @@ import {
   Play,
   Pause,
   RotateCcw,
-  Settings
+  Settings,
+  Navigation,
+  Heart,
+  Clock,
+  BarChart3,
+  Phone,
+  CloudRain,
+  Handshake
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -51,6 +58,11 @@ interface AICapability {
 export default function SaarthiAI() {
   const [isSimulationRunning, setIsSimulationRunning] = useState(false);
   const [selectedCapability, setSelectedCapability] = useState<string | null>(null);
+  const [hourSlider, setHourSlider] = useState(0);
+  const [isAnimating, setIsAnimating] = useState(false);
+  const [selectedScenario, setSelectedScenario] = useState("tourist-peak");
+  const [showParallelModal, setShowParallelModal] = useState(false);
+  const animationInterval = useRef<NodeJS.Timeout | null>(null);
   const { toast } = useToast();
 
   // Mock data sources - todo: remove mock functionality
@@ -190,6 +202,60 @@ export default function SaarthiAI() {
     });
   };
 
+  const handlePlaySimulation = () => {
+    if (isAnimating) return;
+    
+    // Clear any existing interval
+    if (animationInterval.current) {
+      clearInterval(animationInterval.current);
+    }
+    
+    setIsAnimating(true);
+    setHourSlider(0);
+    
+    // Animate slider from 0 to 4 over 5-8 seconds
+    let progress = 0;
+    const duration = 6000; // 6 seconds
+    animationInterval.current = setInterval(() => {
+      progress += 100; // 60fps
+      const currentHour = (progress / duration) * 4;
+      
+      if (currentHour >= 4) {
+        setHourSlider(4);
+        setIsAnimating(false);
+        if (animationInterval.current) {
+          clearInterval(animationInterval.current);
+          animationInterval.current = null;
+        }
+        toast({
+          title: "Simulation Complete",
+          description: "Future risk simulation completed successfully",
+          duration: 3000,
+        });
+      } else {
+        setHourSlider(currentHour);
+      }
+    }, 100);
+  };
+
+  const resetSimulation = () => {
+    if (animationInterval.current) {
+      clearInterval(animationInterval.current);
+      animationInterval.current = null;
+    }
+    setHourSlider(0);
+    setIsAnimating(false);
+  };
+
+  // Cleanup interval on unmount
+  useEffect(() => {
+    return () => {
+      if (animationInterval.current) {
+        clearInterval(animationInterval.current);
+      }
+    };
+  }, []);
+
   return (
     <div className="min-h-screen bg-background">
       <NavigationHeader />
@@ -299,7 +365,11 @@ export default function SaarthiAI() {
                       <Card key={source.id} className="hover-elevate" data-testid={`data-source-${source.id}`}>
                         <CardContent className="p-4">
                           <div className="flex items-start justify-between mb-3">
-                            <div className={`p-2 rounded-lg bg-${source.status === 'active' ? 'success' : source.status === 'syncing' ? 'warning' : 'destructive'}/10`}>
+                            <div className={`p-2 rounded-lg ${
+                              source.status === 'active' ? 'bg-success/10' :
+                              source.status === 'syncing' ? 'bg-warning/10' :
+                              'bg-destructive/10'
+                            }`}>
                               <Icon className="w-6 h-6 text-trust" />
                             </div>
                             <Badge className={getStatusColor(source.status)}>
@@ -565,7 +635,506 @@ export default function SaarthiAI() {
             </Card>
           </TabsContent>
         </Tabs>
+
+        {/* Interactive Simulation Section */}
+        <section className="py-12 space-y-8">
+          <div className="text-center">
+            <h2 className="text-3xl font-bold mb-4">Run a Future Risk Simulation</h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Explore potential risk scenarios and analyze future safety patterns using Saarthi's predictive AI models
+            </p>
+          </div>
+
+          {/* Simulation Controls Card */}
+          <Card className="hover-elevate" data-testid="card-simulation-controls">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Settings className="w-5 h-5 text-trust" />
+                Simulation Controls
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid md:grid-cols-4 gap-4 items-end">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Scenario</label>
+                  <select 
+                    value={selectedScenario} 
+                    onChange={(e) => setSelectedScenario(e.target.value)}
+                    className="w-full p-2 border rounded-md bg-background"
+                    data-testid="select-scenario"
+                  >
+                    <option value="tourist-peak">Tourist Peak Hours</option>
+                    <option value="festival-crowd">Festival Crowd Density</option>
+                    <option value="weather-alert">Weather Alert Response</option>
+                    <option value="emergency-drill">Emergency Response Drill</option>
+                  </select>
+                </div>
+                
+                <div className="flex gap-2">
+                  <Button 
+                    onClick={handlePlaySimulation}
+                    disabled={isAnimating}
+                    className="bg-trust text-trust-foreground hover:bg-trust/90"
+                    data-testid="button-play-simulation"
+                  >
+                    <Play className="w-4 h-4" />
+                  </Button>
+                  <Button 
+                    onClick={resetSimulation}
+                    variant="outline"
+                    data-testid="button-reset-simulation"
+                  >
+                    <RotateCcw className="w-4 h-4" />
+                  </Button>
+                </div>
+                
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Hour +{Math.round(hourSlider)}</label>
+                  <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
+                    <div 
+                      className="h-full bg-trust transition-all duration-300" 
+                      style={{ width: `${(hourSlider / 4) * 100}%` }}
+                    />
+                  </div>
+                </div>
+                
+                <div className="text-center">
+                  <Button 
+                    onClick={() => setShowParallelModal(true)}
+                    className="bg-gradient-to-r from-purple-500 to-blue-600 text-white hover:from-purple-600 hover:to-blue-700"
+                    data-testid="button-launch-parallel-world"
+                  >
+                    Launch Parallel World Simulation
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Map Card */}
+          <Card className="hover-elevate" data-testid="card-simulation-map">
+            <CardContent className="p-0">
+              <div 
+                className="relative h-96 bg-cover bg-center rounded-lg overflow-hidden"
+                style={{ 
+                  backgroundImage: `url('@assets/image_1758110049182.png')`,
+                  backgroundBlendMode: 'overlay'
+                }}
+              >
+                {/* Map Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-br from-trust/10 to-success/10 backdrop-blur-[0.5px]"></div>
+                
+                {/* Map Legend */}
+                <div className="absolute top-4 left-4 bg-background/90 backdrop-blur-sm p-3 rounded-lg border">
+                  <h4 className="font-medium mb-2 text-sm">Risk Zones</h4>
+                  <div className="space-y-1 text-xs">
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 rounded-full bg-success"></div>
+                      <span>Safe</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 rounded-full bg-warning"></div>
+                      <span>Risking Soon</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 rounded-full bg-destructive"></div>
+                      <span>Unsafe</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Animated Trail - shows during simulation */}
+                {isAnimating && (
+                  <svg className="absolute inset-0 w-full h-full pointer-events-none">
+                    <path
+                      d="M 50 300 Q 150 200 250 250 Q 350 300 450 200"
+                      stroke="url(#gradient)"
+                      strokeWidth="4"
+                      fill="none"
+                      strokeDasharray="800"
+                      strokeDashoffset="800"
+                      className="animate-pulse"
+                      style={{
+                        animation: `drawPath 6s ease-in-out forwards`
+                      }}
+                    />
+                    <defs>
+                      <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stopColor="#10b981" />
+                        <stop offset="50%" stopColor="#f59e0b" />
+                        <stop offset="100%" stopColor="#ef4444" />
+                      </linearGradient>
+                    </defs>
+                  </svg>
+                )}
+
+                {/* Simulation Status Overlay */}
+                {isAnimating && (
+                  <div className="absolute bottom-4 right-4 bg-background/90 backdrop-blur-sm p-3 rounded-lg border">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-trust animate-pulse"></div>
+                      <span className="text-sm font-medium">Simulation Running</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        </section>
+
+        {/* Live Insights & Memory Section */}
+        <section className="py-12 space-y-8">
+          <div className="text-center">
+            <h2 className="text-3xl font-bold mb-4">Live Insights & Memory</h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Real-time analysis and historical data that powers Saarthi's decision making
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            {/* Why? Card (Risk Factors) */}
+            <Card className="hover-elevate" data-testid="card-risk-factors">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <AlertTriangle className="w-5 h-5 text-warning" />
+                  Why?
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-3">
+                  <div className="flex items-start gap-3">
+                    <Users className="w-5 h-5 text-warning mt-0.5" />
+                    <div className="flex-1">
+                      <p className="text-sm font-medium">Festival: High crowd density</p>
+                      <div className="flex items-center gap-2 mt-1">
+                        <span className="text-xs text-muted-foreground">Confidence: 89%</span>
+                        <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
+                          <div className="h-full bg-destructive" style={{ width: '89%' }} />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3">
+                    <CloudRain className="w-5 h-5 text-warning mt-0.5" />
+                    <div className="flex-1">
+                      <p className="text-sm font-medium">Weather: Rain forecast in 2hrs</p>
+                      <div className="flex items-center gap-2 mt-1">
+                        <span className="text-xs text-muted-foreground">Confidence: 76%</span>
+                        <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
+                          <div className="h-full bg-warning" style={{ width: '76%' }} />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3">
+                    <MapPin className="w-5 h-5 text-warning mt-0.5" />
+                    <div className="flex-1">
+                      <p className="text-sm font-medium">Location: Remote area - limited help</p>
+                      <div className="flex items-center gap-2 mt-1">
+                        <span className="text-xs text-muted-foreground">Confidence: 94%</span>
+                        <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
+                          <div className="h-full bg-destructive" style={{ width: '94%' }} />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Saarthi's Memory Log Card */}
+            <Card className="hover-elevate" data-testid="card-memory-log">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Brain className="w-5 h-5 text-trust" />
+                  Saarthi's Memory Log
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-3">
+                  <div className="flex items-start gap-3">
+                    <div className="w-2 h-2 rounded-full bg-success mt-2"></div>
+                    <div className="flex-1">
+                      <p className="text-sm font-medium">Tourist helped at Mall Road</p>
+                      <p className="text-xs text-muted-foreground">Successful navigation assistance</p>
+                      <p className="text-xs text-muted-foreground mt-1">2 hours ago</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3">
+                    <div className="w-2 h-2 rounded-full bg-destructive mt-2"></div>
+                    <div className="flex-1">
+                      <p className="text-sm font-medium">Scam attempt detected near Bus Stand</p>
+                      <p className="text-xs text-muted-foreground">Alert sent, tourist avoided risk</p>
+                      <p className="text-xs text-muted-foreground mt-1">6 hours ago</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3">
+                    <div className="w-2 h-2 rounded-full bg-success mt-2"></div>
+                    <div className="flex-1">
+                      <p className="text-sm font-medium">Weather alert system activated</p>
+                      <p className="text-xs text-muted-foreground">Timely rain warning issued</p>
+                      <p className="text-xs text-muted-foreground mt-1">1 day ago</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3">
+                    <div className="w-2 h-2 rounded-full bg-warning mt-2"></div>
+                    <div className="flex-1">
+                      <p className="text-sm font-medium">Crowd surge at festival venue</p>
+                      <p className="text-xs text-muted-foreground">Route optimization provided</p>
+                      <p className="text-xs text-muted-foreground mt-1">2 days ago</p>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Emotion Sync Widget */}
+            <Card className="hover-elevate" data-testid="card-emotion-sync">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Heart className="w-5 h-5 text-trust" />
+                  Emotion Sync
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="text-center space-y-4">
+                  <div className="w-16 h-16 mx-auto bg-success/10 rounded-full flex items-center justify-center">
+                    <Heart className="w-8 h-8 text-success" />
+                  </div>
+                  
+                  <div>
+                    <p className="font-medium text-success">Active</p>
+                    <p className="text-sm text-muted-foreground">Status: Calm</p>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">Heart Rate</span>
+                      <span className="font-medium">72 BPM</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">Stress Level</span>
+                      <Badge className="bg-success text-success-foreground">Low</Badge>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">Mood</span>
+                      <span className="font-medium">Relaxed</span>
+                    </div>
+                  </div>
+
+                  <Button 
+                    size="sm" 
+                    variant="outline" 
+                    className="w-full"
+                    data-testid="button-emotion-settings"
+                  >
+                    <Settings className="w-4 h-4 mr-2" />
+                    Configure
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </section>
+
+        {/* Ecosystem & Support Section */}
+        <section className="py-12 space-y-8">
+          <div className="text-center">
+            <h2 className="text-3xl font-bold mb-4">Ecosystem & Support</h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Comprehensive support network and partnerships that enhance your safety experience
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            {/* Local Guide Connect Card */}
+            <Card className="hover-elevate" data-testid="card-local-guide">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Navigation className="w-5 h-5 text-trust" />
+                  Local Guide Connect
+                </CardTitle>
+                <p className="text-sm text-muted-foreground">Expert Local Assistance</p>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <p className="text-sm">
+                  Connect with verified local guides who know the area inside out. Get personalized recommendations, 
+                  cultural insights, and safe route guidance from trusted community members.
+                </p>
+                
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Available Guides</span>
+                    <Badge className="bg-success text-success-foreground">247 Online</Badge>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Response Time</span>
+                    <span className="font-medium">&lt; 2 min</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Languages</span>
+                    <span className="font-medium">12+</span>
+                  </div>
+                </div>
+
+                <Button 
+                  className="w-full bg-trust text-trust-foreground hover:bg-trust/90"
+                  data-testid="button-connect-guide"
+                >
+                  <Phone className="w-4 h-4 mr-2" />
+                  Connect Now
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Weather & Terrain Advisories Card */}
+            <Card className="hover-elevate" data-testid="card-weather-advisories">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <CloudRain className="w-5 h-5 text-warning" />
+                  Weather & Terrain Advisories
+                </CardTitle>
+                <p className="text-sm text-muted-foreground">Real-time Environmental Intel</p>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <p className="text-sm">
+                  Stay ahead of weather changes and terrain challenges with hyper-local forecasts, 
+                  seasonal advisories, and real-time alerts from meteorological departments.
+                </p>
+                
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Current Conditions</span>
+                    <Badge className="bg-success text-success-foreground">Clear</Badge>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Next 6 Hours</span>
+                    <Badge className="bg-warning text-warning-foreground">Light Rain</Badge>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">UV Index</span>
+                    <span className="font-medium">Moderate (5)</span>
+                  </div>
+                </div>
+
+                <Button 
+                  className="w-full bg-warning text-warning-foreground hover:bg-warning/90"
+                  data-testid="button-weather-alerts"
+                >
+                  <Cloud className="w-4 h-4 mr-2" />
+                  Get Alerts
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Partnerships Card */}
+            <Card className="hover-elevate" data-testid="card-partnerships">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Handshake className="w-5 h-5 text-success" />
+                  Partnerships
+                </CardTitle>
+                <p className="text-sm text-muted-foreground">Trusted Network Alliance</p>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <p className="text-sm">
+                  Strategic alliances with government agencies, tourism boards, emergency services, 
+                  and local businesses to ensure comprehensive safety coverage.
+                </p>
+                
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Emergency Services</span>
+                    <Badge className="bg-success text-success-foreground">Integrated</Badge>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Tourism Boards</span>
+                    <Badge className="bg-trust text-trust-foreground">12 States</Badge>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Local Businesses</span>
+                    <span className="font-medium">2,847 Verified</span>
+                  </div>
+                </div>
+
+                <Button 
+                  className="w-full bg-success text-success-foreground hover:bg-success/90"
+                  data-testid="button-view-partners"
+                >
+                  <Users className="w-4 h-4 mr-2" />
+                  View Partners
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        </section>
       </main>
+
+      {/* Parallel World Simulation Modal */}
+      <Dialog open={showParallelModal} onOpenChange={(open) => !open && setShowParallelModal(false)}>
+        <DialogContent className="max-w-4xl" data-testid="modal-parallel-world">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Brain className="w-5 h-5 text-purple-500" />
+              Parallel World Simulation
+            </DialogTitle>
+          </DialogHeader>
+          
+          <div className="grid md:grid-cols-2 gap-6">
+            {/* Left Column - Map Preview */}
+            <div className="space-y-4">
+              <div className="bg-muted/50 rounded-lg p-4 text-center">
+                <MapPin className="w-12 h-12 mx-auto mb-2 text-muted-foreground" />
+                <p className="text-sm text-muted-foreground">Map Preview (Demo)</p>
+                <p className="text-xs text-muted-foreground mt-1">Interactive 3D simulation environment</p>
+              </div>
+              
+              <div className="flex gap-2">
+                <Button className="flex-1" data-testid="button-start-parallel-sim">
+                  <Play className="w-4 h-4 mr-2" />
+                  Start Simulation
+                </Button>
+                <Button variant="outline" className="flex-1" data-testid="button-stop-parallel-sim">
+                  <Pause className="w-4 h-4 mr-2" />
+                  Stop Simulation
+                </Button>
+              </div>
+            </div>
+            
+            {/* Right Column - Analysis */}
+            <div className="space-y-4">
+              <h4 className="font-medium">Simulation Analysis</h4>
+              <div className="space-y-3">
+                <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
+                  <span className="text-sm">Crowd Density</span>
+                  <Badge className="bg-warning text-warning-foreground">High</Badge>
+                </div>
+                <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
+                  <span className="text-sm">Community Trust</span>
+                  <Badge className="bg-success text-success-foreground">Strong</Badge>
+                </div>
+                <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
+                  <span className="text-sm">CCTV Coverage</span>
+                  <Badge className="bg-trust text-trust-foreground">78%</Badge>
+                </div>
+                <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
+                  <span className="text-sm">Emergency Response</span>
+                  <Badge className="bg-success text-success-foreground">Ready</Badge>
+                </div>
+                <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
+                  <span className="text-sm">Weather Conditions</span>
+                  <Badge className="bg-success text-success-foreground">Clear</Badge>
+                </div>
+              </div>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       <PanicButton variant="floating" />
     </div>

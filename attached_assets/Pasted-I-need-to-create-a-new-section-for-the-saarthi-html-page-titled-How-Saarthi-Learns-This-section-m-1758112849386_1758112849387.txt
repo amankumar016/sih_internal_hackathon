@@ -1,0 +1,129 @@
+I need to create a new section for the saarthi.html page titled 'How Saarthi Learns'. This section must be visually identical to the provided screenshot and, most importantly, must be populated with realistic and dynamic-looking mock data.
+
+Please follow these instructions precisely.
+
+Part 1: Section Header and Layout
+Create the Section Container: Add a new, full-width section to the Saarthi page.
+
+Add the Header:
+
+Start with an <h2> title: <i class="fas fa-cloud"></i> How Saarthi Learns. (Use a Font Awesome cloud icon).
+
+Add a <p> subtitle below it: Real-time data integration from multiple verified sources ensures comprehensive safety analysis.
+
+Grid Layout: Inside the section, create a responsive grid that will hold the data source cards. The grid should display 3 cards per row on desktop, 2 on tablet, and 1 on mobile.
+
+Part 2: Data Source Card Structure (The Template)
+For each item in the grid, create a 'Glassmorphism' card with the following internal structure. This will be the template for all data source cards.
+
+Top Row (Flexbox, space-between):
+
+Left Side: A div containing an icon and the card's title (e.g., <i class="fas fa-shield-alt"></i> <h4>Police & NCRB Data</h4>).
+
+Right Side: A <span> for the status tag (e.g., <span class="status-tag active">active</span>).
+
+Middle Section:
+
+A div containing the 'Reliability' label and the percentage value, aligned to opposite ends (e.g., <p>Reliability</p> <p class="reliability-percent">98%</p>).
+
+A horizontal progress bar element below it (e.g., <div class="progress-bar-container"><div class="progress-bar-fill"></div></div>).
+
+Bottom Row:
+
+A small, light-grey paragraph for the last update timestamp (e.g., <p class="timestamp">Updated 2 min ago</p>).
+
+Part 3: Populate with Realistic Mock Data
+Now, create six cards using the template above, and populate them with the following specific, varied data to make the dashboard look live and authentic.
+
+Card 1:
+
+Icon: Font Awesome fa-shield-alt (shield)
+
+Title: Police & NCRB Data
+
+Status Tag: active (Green background)
+
+Reliability: 98%
+
+Timestamp: Updated 2 min ago
+
+Card 2:
+
+Icon: Font Awesome fa-newspaper
+
+Title: Local & Regional News
+
+Status Tag: active (Green background)
+
+Reliability: 85%
+
+Timestamp: Updated 5 min ago
+
+Card 3:
+
+Icon: Font Awesome fa-cloud-sun-rain (weather)
+
+Title: IMD Weather Alerts
+
+Status Tag: syncing (Yellow background)
+
+Reliability: 96%
+
+Timestamp: Updated 1 min ago
+
+Card 4:
+
+Icon: Font Awesome fa-users
+
+Title: Social Media Trends
+
+Status Tag: active (Green background)
+
+Reliability: 72%
+
+Timestamp: Updated 30 sec ago
+
+Card 5:
+
+Icon: Font Awesome fa-wifi
+
+Title: Network Data
+
+Status Tag: active (Green background)
+
+Reliability: 91%
+
+Timestamp: Updated 45 sec ago
+
+Card 6:
+
+Icon: Font Awesome fa-mobile-alt (mobile phone)
+
+Title: Device Telemetry
+
+Status Tag: active (Green background)
+
+Reliability: 99%
+
+Timestamp: Updated 10 sec ago
+
+Part 4: CSS Styling
+Card Style: Apply the global 'Glassmorphism' style to all six cards.
+
+Status Tags:
+
+Style the .active class with a green background and dark text.
+
+Style the .syncing class with a yellow background and dark text.
+
+Give the tags rounded corners and padding.
+
+Progress Bars:
+
+Style the progress bar container with a light grey background.
+
+Style the inner fill div with a red background, as shown in the image.
+
+Use JavaScript to set the width of the inner fill div to match the reliability percentage for each card (e.g., width: 98%;).
+
+Responsiveness: Ensure the grid layout adjusts correctly on smaller screens."

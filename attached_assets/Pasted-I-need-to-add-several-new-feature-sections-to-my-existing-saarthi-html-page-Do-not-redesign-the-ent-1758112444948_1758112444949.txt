@@ -1,0 +1,75 @@
+I need to add several new feature sections to my existing saarthi.html page. Do not redesign the entire page layout. Instead, add the following new sections and components sequentially into the current page flow. All new components must use the existing 'Glassmorphism' design system.
+
+Part 1: Add the Interactive Simulation Section
+Find the end of the existing 'How Your Saarthi Learns' section (the one with the data orbs/bubbles). After it, insert a new, full-width section with the title <h2>Run a Future Risk Simulation</h2>. This section will contain:
+
+A. A 'Simulation Controls' Card:
+
+Create a 'Glassmorphism' card with a dropdown for 'Scenario', a 'Play' icon button, a horizontal 'Hour' slider (+0 to +4), and a 'Reset' button.
+
+B. A 'Map' Card:
+
+Below the controls, create a large card for the map.
+
+Map Background: Use the map image I provide in Replit as the card's background.
+
+Map Legend: Add a small legend in the corner with colored dots: Green ('Safe'), Yellow ('RiskingSoon'), Red ('Unsafe').
+
+Trigger for Parallel World: Inside this card, also add a primary action button with the text "Launch Parallel World Simulation".
+
+C. Dynamic Trail Animation (JavaScript):
+
+When the 'Play' button is clicked, animate a multi-colored SVG line (a "trail") drawing itself on top of the map image over 5-8 seconds.
+
+Simultaneously, the 'Hour' slider should move from +0 to +4 as the trail animates.
+
+Part 2: Add the 'Live Insights & Memory' Section
+Directly below the new 'Simulation' section you just added, insert another new section titled <h2>Live Insights & Memory</h2>. Arrange the following 'Glassmorphism' cards inside this section in a responsive grid:
+
+A. 'Why?' Card (Risk Factors):
+
+Create a card titled <h3>Why?</h3>.
+
+Inside, display at least three mock risk factors (e.g., "Festival: high crowd density").
+
+Each factor must have an icon, a 'Confidence: XX%' score, and a red horizontal progress bar showing the confidence level.
+
+B. 'Saarthi's Memory Log' Card:
+
+Create a card titled <h3>Saarthi's Memory Log</h3>.
+
+Inside, display a list of 3-4 mock past experiences. Each item should have a colored dot (Green for safe, Red for risk), a description, and a timestamp.
+
+C. 'Emotion Sync' Widget:
+
+Create a small card showing the status of the emotion sensing feature with an icon and text like Emotion Sync: Active (Status: Calm).
+
+Part 3: Add the 'Parallel World Simulation' Modal
+Create the HTML and CSS for a modal window. This modal should be hidden by default.
+
+Modal Content: Design the modal with a 'Glassmorphism' style, a title <h3>Parallel World Simulation</h3>, and a 'Close' button.
+
+Layout: Inside, create a two-column layout:
+
+Left: A placeholder for a 'Map preview (demo)' and 'Start/Stop Simulation' buttons.
+
+Right: A 'Simulation Analysis' list with mock data (Crowd Density, Community Trust, CCTV, etc.).
+
+JavaScript: The modal should become visible only when the "Launch Parallel World Simulation" button (from Part 1) is clicked. The 'Close' button should hide it.
+
+Part 4: Add the 'Ecosystem & Support' Section
+At the very bottom of the entire saarthi.html page, after all other content, add a final new section titled <h2>Ecosystem & Support</h2>.
+
+Inside this section, create a three-column grid.
+
+Place the three 'Glassmorphism' cards from the image here:
+
+'Local Guide Connect'
+
+'Weather & Terrain Advisories'
+
+'Partnerships'
+
+Each card should have its unique icon, title, subtitle, and description.
+
+Please add these features as new, distinct sections without altering the existing top sections of the page."

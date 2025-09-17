@@ -1,0 +1,154 @@
+I need to create a new tabbed interface within the saarthi.html page. This interface will allow users to switch between viewing 'AI Capabilities' and 'Live Analysis'. The design must be identical to the provided screenshots, use the 'Glassmorphism' style, and be filled with realistic mock data.
+
+Part 1: Create the Main Tab Navigation
+Tab Container: At a suitable location on the Saarthi page (e.g., below the hero section), create a tab navigation bar.
+
+Tab Buttons: Add four tab buttons. The buttons should have an icon and a label:
+
+<i class="fas fa-database"></i> Data Sources
+
+<i class="fas fa-cogs"></i> AI Capabilities
+
+<i class="fas fa-wave-square"></i> Live Analysis
+
+<i class="fas fa-cog"></i> AI Settings
+
+Content Area: Below the tabs, create a main content div where the content for the active tab will be displayed.
+
+Part 2: Build the 'AI Capabilities' Tab View
+This view should be a 2x2 grid of 'Glassmorphism' cards.
+
+A. Card Template:
+Each card will contain:
+
+An icon, a title, and a status tag.
+
+A short description.
+
+An "AI Confidence" section with a label, percentage, and a red progress bar.
+
+A "View Demo" button with an eye icon.
+
+B. Populate with Realistic Mock Data:
+
+Card 1:
+
+Icon: fa-chart-line (line chart)
+
+Title: Risk Prediction
+
+Status Tag: ready (Green background)
+
+Description: Analyze millions of data points to predict potential safety risks in real-time.
+
+AI Confidence: 87%
+
+Card 2:
+
+Icon: fa-map-signs (map signs)
+
+Title: Smart Route Planning
+
+Status Tag: ready (Green background)
+
+Description: Optimize travel routes based on safety scores, weather, and real-time conditions.
+
+AI Confidence: 92%
+
+Card 3:
+
+Icon: fa-exclamation-triangle (warning triangle)
+
+Title: Emergency Response
+
+Status Tag: ready (Green background)
+
+Description: Instant threat detection and automated emergency service coordination.
+
+AI Confidence: 94%
+
+Card 4:
+
+Icon: fa-user-secret (spy/scam icon)
+
+Title: AI Scam Prevention
+
+Status Tag: learning (Yellow background)
+
+Description: Detect and prevent tourist-targeted scams using behavioral analysis.
+
+AI Confidence: 78%
+
+Part 3: Build the 'Live Analysis' Tab View
+This view has two main sections inside a larger 'Glassmorphism' container.
+
+A. 'Live Safety Analysis' Section:
+
+Header: Create a header with an icon (fa-wave-square) and the title <h2>Live Safety Analysis</h2>. On the right, add text that says Real-time Monitoring.
+
+Summary Cards: Create a 3-column grid of smaller cards:
+
+Card 1 (Risk Assessment):
+
+Title: Risk Assessment
+
+Tag: Low (Green)
+
+Value: 25/100 (large font)
+
+Subtitle: Current location safety score
+
+Card 2 (Active Monitoring):
+
+Title: Active Monitoring
+
+Tag: Live (Blue)
+
+Value: 847
+
+Subtitle: Data points analyzed per minute
+
+Card 3 (Predictions):
+
+Title: Predictions
+
+Tag: Active (Yellow)
+
+Value: 12
+
+Subtitle: Route recommendations generated
+
+B. 'Neural Network Activity' Section:
+
+Header: Create a header with an icon (fa-project-diagram) and the title <h2>Neural Network Activity</h2>.
+
+Metrics List: Display a list of neural network metrics. Each item should have a label on the left, and a progress bar and percentage on the right. Crucially, use a different color for each progress bar.
+
+Metric 1:
+
+Label: Pattern Recognition
+
+Progress Bar Color: Blue
+
+Value: 78%
+
+Metric 2:
+
+Label: Risk Correlation
+
+Progress Bar Color: Green
+
+Value: 92%
+
+Metric 3:
+
+Label: Predictive Accuracy
+
+Progress Bar Color: Yellow
+
+Value: 85%
+
+Part 4: Styling & Interactivity
+CSS: Style the new status tags (ready, learning, Low, Live, Active) with their respective background colors. Style the multi-colored progress bars. Ensure all new components are responsive.
+
+JavaScript: Implement the tab switching functionality. Clicking a tab button should show its corresponding content view while hiding the others. The active tab button should have a distinct style (e.g., solid background or an underline)."

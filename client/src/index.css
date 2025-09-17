@@ -379,4 +379,14 @@
       transform: scale(1.05);
     }
   }
+
+  /* Animation for drawing SVG path in simulation */
+  @keyframes drawPath {
+    from {
+      stroke-dashoffset: 800;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
 }
