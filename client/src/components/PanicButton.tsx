@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { AlertTriangle, Phone, Shield, X } from "lucide-react";
+import { AlertTriangle, Phone, Shield, X, CheckCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface PanicButtonProps {
@@ -22,13 +22,7 @@ export default function PanicButton({ variant = "header", className = "" }: Pani
     setIsOpen(false);
     setIsCountingDown(false);
     setCountdown(10);
-    
-    toast({
-      title: "Panic Alert Successfully Sent to Authorities",
-      description: "Emergency responders have been notified of your location and situation.",
-      duration: 5000,
-    });
-  }, [toast]);
+  }, []);
 
   const handleCancelAlert = () => {
     setIsOpen(false);
@@ -196,23 +190,57 @@ export default function PanicButton({ variant = "header", className = "" }: Pani
         </DialogContent>
       </Dialog>
       
-      {alertSent && (
-        <div className="fixed bottom-4 left-4 right-4 md:left-auto md:w-96 glass rounded-lg p-4 z-50" data-testid="alert-sent-toast">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <Shield className="w-5 h-5 text-success mr-2" />
-              <span className="text-sm font-medium">Alert Sent Successfully</span>
+      {/* Success Confirmation Modal */}
+      <Dialog open={alertSent} onOpenChange={() => {}}>
+        <DialogContent 
+          className="max-w-md mx-auto fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white/90 backdrop-blur-md border border-white/20 shadow-2xl rounded-2xl p-0 z-[100]"
+          data-testid="modal-panic-success"
+          onEscapeKeyDown={(e) => e.preventDefault()}
+          onPointerDownOutside={(e) => e.preventDefault()}
+        >
+          <div className="text-center p-8 space-y-6">
+            {/* Large Green Checkmark */}
+            <div className="flex justify-center">
+              <div className="rounded-full bg-green-100 p-4">
+                <CheckCircle 
+                  className="w-16 h-16" 
+                  style={{ color: '#16A34A' }}
+                />
+              </div>
             </div>
-            <div className="space-x-2">
-              <Button size="sm" variant="outline" onClick={() => console.log("Track request clicked")} data-testid="button-track-request">
-                Track Request
-              </Button>
-              <Button size="sm" variant="ghost" onClick={() => setAlertSent(false)} data-testid="button-thanks">
+            
+            {/* Heading */}
+            <div className="space-y-3">
+              <h2 className="text-2xl font-bold text-gray-900 font-inter">
+                Alert Sent Successfully
+              </h2>
+              
+              {/* Supportive Subtitle */}
+              <p className="text-gray-600 leading-relaxed font-inter">
+                Your location and details have been dispatched to the nearest authorities. Help is on the way.
+              </p>
+            </div>
+            
+            {/* Thanks Button */}
+            <div className="pt-4">
+              <Button
+                onClick={() => setAlertSent(false)}
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 font-inter"
+                data-testid="button-thanks-modal"
+              >
                 Thanks
               </Button>
             </div>
           </div>
-        </div>
+        </DialogContent>
+      </Dialog>
+      
+      {/* Semi-transparent backdrop overlay */}
+      {alertSent && (
+        <div 
+          className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[90]"
+          data-testid="success-modal-backdrop"
+        />
       )}
     </>
   );
