@@ -167,35 +167,87 @@ export default function TrackPanicModal({ isOpen, onClose }: TrackPanicModalProp
     switch (status) {
       case "completed":
         return (
-          <CheckCircle 
-            className="w-5 h-5 text-green-600"
-            style={{
-              animation: step?.completedAt ? 'draw-checkmark 0.6s ease-in-out' : 'none'
-            }}
-          />
+          <div className="relative">
+            {/* Enhanced completed checkmark with success glow */}
+            <div 
+              className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center border-2 border-white shadow-lg"
+              style={{
+                animation: step?.completedAt ? 'success-check-draw 0.8s ease-in-out' : 'none',
+                boxShadow: '0 0 15px rgba(34, 197, 94, 0.6)'
+              }}
+            >
+              <CheckCircle 
+                className="w-4 h-4 text-white"
+                style={{
+                  animation: step?.completedAt ? 'success-check-draw 0.6s 0.2s ease-in-out backwards' : 'none'
+                }}
+              />
+            </div>
+            {/* Success completion rings */}
+            <div className="absolute inset-0 w-6 h-6 bg-green-400 rounded-full animate-ping opacity-40" style={{animationDelay: '0.1s'}}></div>
+            <div className="absolute -inset-1 w-8 h-8 bg-green-300 rounded-full animate-ping opacity-20" style={{animationDelay: '0.3s'}}></div>
+          </div>
         );
       case "in-progress":
         const icon = step?.title?.includes("Police") ? 
-          <Siren className="w-5 h-5 text-blue-600" style={{ animation: 'flash 2s infinite' }} /> :
+          <Siren className="w-4 h-4 text-blue-600" style={{ animation: 'flash 1.5s infinite' }} /> :
           step?.title?.includes("Medic") ?
-          <Heart className="w-5 h-5 text-red-600" style={{ animation: 'pulse 2s infinite' }} /> :
-          <Clock className="w-5 h-5 text-blue-600" />;
+          <Heart className="w-4 h-4 text-red-600" style={{ animation: 'heartbeat 1.8s infinite' }} /> :
+          step?.title?.includes("Rescue") ?
+          <Shield className="w-4 h-4 text-orange-600" style={{ animation: 'emergency-pulse 2s infinite' }} /> :
+          <Clock className="w-4 h-4 text-blue-600" style={{ animation: 'tick-pulse 2s infinite' }} />;
+        
         return (
           <div className="relative">
-            {icon}
+            {/* Enhanced active status indicator */}
             <div 
-              className="absolute inset-0 w-5 h-5 rounded-full border-2 border-blue-400 animate-ping"
-              style={{ 
-                boxShadow: '0 0 10px rgba(59, 130, 246, 0.5)',
-                animation: 'pulse-glow 2s infinite'
+              className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center border-2 border-white shadow-lg"
+              style={{
+                animation: 'active-status-pulse 2s infinite',
+                boxShadow: '0 0 20px rgba(59, 130, 246, 0.8)'
               }}
+            >
+              {icon}
+            </div>
+            
+            {/* Multi-layer pulsing rings for active status */}
+            <div 
+              className="absolute inset-0 w-6 h-6 rounded-full border-2 border-blue-400"
+              style={{ animation: 'active-ring-1 2s infinite' }}
             />
+            <div 
+              className="absolute -inset-1 w-8 h-8 rounded-full border border-blue-300"
+              style={{ animation: 'active-ring-2 2s infinite 0.5s' }}
+            />
+            <div 
+              className="absolute -inset-2 w-10 h-10 rounded-full border border-blue-200 opacity-60"
+              style={{ animation: 'active-ring-3 2s infinite 1s' }}
+            />
+            
+            {/* Activity indicator dots */}
+            <div className="absolute -top-1 -right-1 w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></div>
           </div>
         );
       case "pending":
-        return <Circle className="w-5 h-5 text-gray-400" />;
+        return (
+          <div className="relative">
+            {/* Enhanced pending status with subtle animations */}
+            <div className="w-6 h-6 bg-gray-300 dark:bg-gray-600 rounded-full border-2 border-gray-200 dark:border-gray-500 flex items-center justify-center">
+              <Circle className="w-3 h-3 text-gray-500 dark:text-gray-400" />
+            </div>
+            {/* Subtle waiting pulse */}
+            <div 
+              className="absolute inset-0 w-6 h-6 bg-gray-200 dark:bg-gray-500 rounded-full opacity-30"
+              style={{ animation: 'waiting-pulse 4s infinite' }}
+            />
+          </div>
+        );
       default:
-        return <Circle className="w-5 h-5 text-gray-400" />;
+        return (
+          <div className="w-6 h-6 bg-gray-300 rounded-full border-2 border-gray-200 flex items-center justify-center">
+            <Circle className="w-3 h-3 text-gray-500" />
+          </div>
+        );
     }
   };
 
