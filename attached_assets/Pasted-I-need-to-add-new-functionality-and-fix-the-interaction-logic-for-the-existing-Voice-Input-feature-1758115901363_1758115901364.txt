@@ -1,0 +1,78 @@
+I need to add new functionality and fix the interaction logic for the existing 'Voice Input' feature on my website. The visual design should remain the same, but the three main interactive elements (microphone button, send button, call button) need to be updated.
+
+Please follow these three tasks precisely.
+
+Task 1: Fix the Microphone Button Toggle Logic
+The central microphone button needs to function as a toggle to start and stop recording.
+
+Implement Toggle Behavior (JavaScript):
+
+The first click on the purple microphone circle should start a "recording" state.
+
+The second click on the circle should stop the "recording" state.
+
+Add Visual Feedback for Recording (CSS & JavaScript):
+
+When recording starts, make the following UI changes:
+
+Change the text below the circle from "Tap to speak" to "Recording... Tap again to stop".
+
+Add a subtle, pulsing red glow or border around the purple circle to indicate it's live (box-shadow: 0 0 20px rgba(220, 38, 38, 0.8); with a CSS animation).
+
+(Optional but recommended): Change the microphone icon inside the circle to a 'stop' square icon.
+
+Add Success Confirmation (HTML & JavaScript):
+
+When the recording is stopped (on the second click), revert the button to its original idle appearance.
+
+Immediately after, display a small, temporary toast notification at the bottom of the screen that says: "<i class='fas fa-check-circle'></i> Voice recorded successfully". This notification should appear for a few seconds and then fade out.
+
+Task 2: Create a 'Call Emergency Helpline' Modal
+The "Call Emergency Helpline" button should open a popup with a list of important numbers.
+
+Create a Modal (HTML & CSS):
+
+Design a modal window that is hidden by default. It should use the site's 'Glassmorphism' style.
+
+The modal should have a clear title like "Emergency Helplines" and a "Close" button.
+
+Populate with Helpline Numbers:
+
+Inside the modal, create a list of Indian and regional emergency numbers. Each list item should clearly state the service and the number.
+
+Use this specific list:
+
+All-in-One Emergency: 112
+
+Police: 100
+
+Ambulance: 108
+
+Fire Department: 101
+
+Women Helpline: 1091
+
+Tourist Police (Pan-India): 1363
+
+Disaster Management (North East Region): 1077
+
+Implement Modal Trigger (JavaScript):
+
+Add a click event listener to the "Call Emergency Helpline" button that shows this modal when clicked. The 'Close' button should hide it.
+
+Task 3: Add Confirmation for 'Send Voice Emergency'
+The "Send Voice Emergency" button needs to provide feedback to the user after being clicked.
+
+Implement Click Feedback (JavaScript):
+
+When the red "Send Voice Emergency" button is clicked, trigger a confirmation message.
+
+Display Success Notification:
+
+Use a small, temporary toast notification (similar to the one in Task 1).
+
+The notification should say: "<i class='fas fa-paper-plane'></i> Emergency note sent successfully to the nearest authorities."
+
+This should appear for a few seconds and then fade out.
+
+Please update the HTML, CSS, and JavaScript files as needed to implement these three enhancements."

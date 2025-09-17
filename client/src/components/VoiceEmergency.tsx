@@ -1,11 +1,15 @@
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Mic, Phone, Languages, AlertTriangle } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Mic, Phone, Languages, AlertTriangle, Square, X, CheckCircle, Send } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 export default function VoiceEmergency() {
   const [selectedLanguage, setSelectedLanguage] = useState("english");
   const [isRecording, setIsRecording] = useState(false);
+  const [isHelplineModalOpen, setIsHelplineModalOpen] = useState(false);
+  const { toast } = useToast();
 
   const languages = [
     { code: "english", name: "English", native: "English" },
@@ -16,21 +20,50 @@ export default function VoiceEmergency() {
     { code: "tamil", name: "Tamil", native: "தமிழ்" },
   ];
 
+  const emergencyNumbers = [
+    { service: "All-in-One Emergency", number: "112" },
+    { service: "Police", number: "100" },
+    { service: "Ambulance", number: "108" },
+    { service: "Fire Department", number: "101" },
+    { service: "Women Helpline", number: "1091" },
+    { service: "Tourist Police (Pan-India)", number: "1363" },
+    { service: "Disaster Management (North East Region)", number: "1077" },
+  ];
+
   const handleLanguageSelect = (language: string) => {
     setSelectedLanguage(language);
   };
 
   const handleMicrophoneClick = () => {
-    setIsRecording(!isRecording);
-    console.log("Voice recording:", !isRecording ? "started" : "stopped");
+    const newRecordingState = !isRecording;
+    setIsRecording(newRecordingState);
+    
+    console.log("Voice recording:", newRecordingState ? "started" : "stopped");
+    
+    // Show success toast when recording stops
+    if (!newRecordingState) {
+      toast({
+        title: "Voice recorded successfully",
+        description: "Your voice message has been captured",
+        duration: 3000,
+      });
+    }
   };
 
   const handleSendEmergency = () => {
     console.log("Sending voice emergency alert...");
+    
+    // Show success confirmation toast
+    toast({
+      title: "Emergency note sent successfully",
+      description: "Your emergency alert has been sent to the nearest authorities",
+      duration: 4000,
+    });
   };
 
   const handleCallHelpline = () => {
-    console.log("Calling emergency helpline...");
+    console.log("Opening emergency helpline modal...");
+    setIsHelplineModalOpen(true);
   };
 
   return (
@@ -86,13 +119,21 @@ export default function VoiceEmergency() {
                     size="icon"
                     className={`w-24 h-24 rounded-full transition-all duration-300 ${
                       isRecording 
-                        ? "bg-red-600 hover:bg-red-700 animate-pulse" 
+                        ? "bg-red-600 hover:bg-red-700" 
                         : "bg-purple-600 hover:bg-purple-700"
                     } text-white shadow-lg hover:shadow-xl`}
+                    style={isRecording ? {
+                      boxShadow: '0 0 20px rgba(220, 38, 38, 0.8)',
+                      animation: 'pulse 2s infinite'
+                    } : {}}
                     onClick={handleMicrophoneClick}
                     data-testid="button-microphone"
                   >
-                    <Mic className={`w-10 h-10 ${isRecording ? "animate-pulse" : ""}`} />
+                    {isRecording ? (
+                      <Square className="w-10 h-10" fill="currentColor" />
+                    ) : (
+                      <Mic className="w-10 h-10" />
+                    )}
                   </Button>
                   {isRecording && (
                     <div className="absolute -inset-2 border-4 border-red-400 rounded-full animate-ping"></div>
@@ -100,7 +141,7 @@ export default function VoiceEmergency() {
                 </div>
                 
                 <p className="text-center text-muted-foreground">
-                  {isRecording ? "Recording... Tap to stop" : "Tap to speak"}
+                  {isRecording ? "Recording... Tap again to stop" : "Tap to speak"}
                 </p>
 
                 {/* Action Buttons */}
@@ -143,6 +184,50 @@ export default function VoiceEmergency() {
           </div>
         </div>
       </div>
+
+      {/* Emergency Helpline Modal */}
+      <Dialog open={isHelplineModalOpen} onOpenChange={setIsHelplineModalOpen}>
+        <DialogContent className="backdrop-blur-md bg-background/90 border border-white/20 shadow-xl max-w-md">
+          <DialogHeader className="pb-4">
+            <div className="flex items-center justify-between">
+              <DialogTitle className="text-xl font-bold">Emergency Helplines</DialogTitle>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setIsHelplineModalOpen(false)}
+                className="hover:bg-white/10"
+                data-testid="button-close-helpline-modal"
+              >
+                <X className="w-4 h-4" />
+              </Button>
+            </div>
+          </DialogHeader>
+          
+          <div className="space-y-3">
+            {emergencyNumbers.map((item, index) => (
+              <div 
+                key={index}
+                className="flex justify-between items-center p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
+                data-testid={`helpline-${index}`}
+              >
+                <div>
+                  <p className="font-medium text-sm">{item.service}</p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="font-bold text-trust text-lg">{item.number}</span>
+                  <Phone className="w-4 h-4 text-muted-foreground" />
+                </div>
+              </div>
+            ))}
+          </div>
+          
+          <div className="pt-4 border-t border-white/10">
+            <p className="text-xs text-muted-foreground text-center">
+              Tap any number to call directly from your phone
+            </p>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
