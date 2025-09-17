@@ -1,0 +1,333 @@
+# GUARD (Smart Tourist Safety) - Complete Builder.io Prompts
+
+## Page 1: Landing/Login Page
+
+**Prompt for Builder.io:**
+
+Design a cinematic, mobile-first landing page for "GUARD - Smart Tourist Safety" with hero section featuring high-resolution Meghalaya waterfall background (Nohkalikai/Wei Sawdong). Apply dark gradient overlay for text legibility. 
+
+**Color Palette:**
+- Navy #0b2b4a (primary highlights)
+- Deep Blue #0f5fa8
+- Teal #1fa3a3
+- Sea Green #2fa56f
+- Red #E63946 (panic button)
+- White #FFFFFF
+- Jet Black #0B0B0B
+
+**Typography:** Inter font family - Bold (700) for headings, Semi-Bold (600) for subheadings, Regular (400) for body text.
+
+**Header Navigation:**
+- Translucent glass background (white 8-10% opacity)
+- Logo "GUARD" on left
+- Language dropdown with Indian languages: Assamese, Bengali, Bodo, Dogri, Gujarati, Hindi, Kannada, Kashmiri, Konkani, Maithili, Malayalam, Manipuri, Marathi, Nepali, Odia, Punjabi, Sanskrit, Santali, Sindhi, Tamil, Telugu, Urdu
+- Large circular red PANIC button on right with subtle pulse animation
+- Hamburger menu icon
+
+**Hero Section:**
+- Full-screen Meghalaya waterfall background with subtle parallax
+- Main tagline: "SafeTrip — Emergency SOS"
+- Subtitle: "Smart Tourist Safety & Incident Response System"
+- Call-to-action buttons with glassmorphism effect
+
+**Quick Actions Box:**
+- Emergency Access (Voice-Text Emergency Access)
+- Issue Digital ID at Kiosk
+- Both buttons with navy highlight and hover effects
+
+**Footer:**
+```
+Left: GUARD logo + "Smart Tourist Safety & Incident Response System" + "Built for Smart India Hackathon 2025"
+Center: Home · Features · Dashboard · About · Contact · touristsafety@collegehackathon.in
+Right: Developed by: Aman · Aman Kumar · Anushka · Diksha · Priyanshi · Vijendra
+Bottom: © 2025 GUARD · Built with ❤️ by Students
+```
+
+---
+
+## Page 2: Registration/Signup Page
+
+**Prompt for Builder.io:**
+
+Create a secure registration form with blockchain-based Digital Tourist ID generation:
+
+**Form Fields:**
+- Full Name (required)
+- Phone Number (required)
+- Aadhaar/Passport for KYC (required)
+- Emergency Contact Name & Number
+- Trip Duration (from-to dates)
+- Destination/Itinerary
+- Consent checkbox: "I consent to location use for my safety"
+- Helper text: "We only use your location to help responders find you quickly in an emergency" (gray, 12px)
+
+**Button:** "Get My Safety ID" (primary navy button)
+
+**Features to highlight:**
+- Blockchain-secured Digital Tourist ID
+- Valid only for trip duration
+- Emergency contacts integration
+- KYC verification at entry points
+
+**Tooltips:** Add helpful tooltips for Aadhaar/Passport field and emergency contacts to reduce confusion.
+
+---
+
+## Page 3: Tourist Dashboard
+
+**Prompt for Builder.io:**
+
+Design the main tourist dashboard with glassmorphism cards on light gradient background (light blue to light purple blend):
+
+**Header:**
+- Location display: "Currently in: [Manali/Guwahati/Meghalaya]" (preset options)
+- Digital ID status with QR code
+- PANIC button (rectangular with curved corners, subtle floating effect, glowing animation every 2 seconds)
+
+**Main Dashboard Cards (glassmorphism style):**
+
+1. **Safety Score Widget** (hero element - large radial speedometer):
+   - Score 0-100 with color coding: 0-30 green, 31-70 orange, 71-100 red
+   - Last updated timestamp
+
+2. **Current Location Info & Itinerary** (merged box):
+   - Current location with local information
+   - Places to visit, must try, nearest hotels, rescue centers, price rates
+   - Trip itinerary with timeline
+
+3. **Saarthi (Digital Twin)** section:
+   - "Meet Saarthi" with animated neural network graphic
+   - Your personal safety co-pilot tagline
+   - Access to full Saarthi features
+
+4. **Interactive Map** with dual tabs:
+   - Physical maps (roads/terrain)
+   - Heat map overlay (Safe/Risky/Unsafe)
+   - Real-time breadcrumb trail
+   - Fake Google Maps-style appearance
+
+5. **Track Panic Progress** (if active):
+   - Red colored button showing panic request status
+   - Detailed progress from authorities, police, rescue teams
+
+**Feature Buttons Grid (horizontal layout below map):**
+- Community Forum
+- Real-time Chat
+- Guardian Gamification  
+- AI Guide (green button)
+- Settings
+- Feedback
+
+**Quick Actions maintained from login page:**
+- Voice-Text Emergency Access
+- Issue Digital ID
+
+---
+
+## Page 4: Saarthi (Digital Twin) Page
+
+**Prompt for Builder.io:**
+
+Create a sophisticated AI Digital Twin interface with glassmorphism design:
+
+**Hero Section - "Meet Saarthi":**
+- Animated glowing neural network/digital brain graphic
+- User avatar ("MT") at center with breathing glow effect
+- Main title: "Meet Your Digital Twin" 
+- Tagline: "Your personal safety co-pilot, analyzing millions of data points to predict and prevent risks in real-time"
+
+**Interactive Data Sources ("How Saarthi Learns"):**
+- Central brain graphic with animated glowing lines to floating Data Orbs:
+  - Police Badge: Official Police & NCRB Data
+  - Newspaper: Local & Regional News  
+  - Cloud/Sun: IMD Weather Alerts
+  - Star: Tourist & Community Reviews
+  - Twitter: Public Social Media Trends
+  - Cell Tower: Telecom Network Data
+  - Map Pin: Geospatial & Map Data
+  - Phone: Your On-Device Telemetry
+
+**Core Capabilities Carousel:**
+- Infinite horizontal scrolling with glassmorphism cards
+- Fast animation speed
+- Cards for: Risk Prediction, Route Optimization, Emergency Response, Community Insights
+
+**Feature Widget Table (horizontal layout):**
+Each with custom icons and modal functionality:
+- Personalized Stamina & Health Advisor
+- AI Scam Prevention  
+- Quick Safety Modes
+- Why? (Risk Explanation)
+- Automated Evidence Logging
+- Trust Network
+- AR Overlay Demo
+- System Controls
+
+**Hourly Simulation:**
+- Extended hours simulation showing multiple fake tourist paths
+- Realistic path drawing with turns and stops
+- Heat map generation for risk zones
+
+---
+
+## Page 5: Police Dashboard (Admin)
+
+**Prompt for Builder.io:**
+
+Create a comprehensive police/admin dashboard:
+
+**Header:**
+- "Police Dashboard" title
+- Single "Select Filter" dropdown with all filter options
+- Real-time alerts counter
+
+**Main Dashboard Grid:**
+
+**Summary Cards Row (4 cards):**
+1. Active Tourists: 12,847 (+8.2% from last month)
+2. IoT Devices: 1,234 (12 offline)  
+3. Critical Alerts: 23 (5 new today) - red highlighting
+4. System Uptime: 99.8%
+
+**Charts Section:**
+- Weekly Tourist Activity (line chart)
+- Safety Score Distribution (bar chart)
+
+**Live Alerts List:**
+- Indian names for tourists
+- Alert types: PANIC, Geofence, Medical, etc.
+- Location information for each alert
+- Action buttons: Acknowledge, Escalate, Auto e-FIR
+- Real-time updates
+
+**Right Panel:**
+- Interactive map with tourist traces
+- Blockchain status indicator
+- Multi-agency escalation options (Police → SDRF → NDRF)
+
+**Additional Features:**
+- Automated alert dispatch system
+- Evidence logging integration
+- Hospital/ambulance tie-ups for medical alerts
+- Partnership management (hotels, tour operators, telecom)
+
+---
+
+## Page 6: Community Forum
+
+**Prompt for Builder.io:**
+
+Design a vibrant community platform:
+
+**Main Forum Page:**
+- Title: "Community Forum"
+- Post cards with glassmorphism effect showing:
+  - Post title and preview
+  - Category tags (Safety Tips, Q&A, Local Guides, Price Transparency)
+  - Author name and avatar
+  - Upvote count with icon
+  - Comment count with icon
+  - Timestamp
+
+**Sorting Options:**
+- Trending, Newest, Most Helpful
+- Category filters
+
+**Create Post Modal:**
+- Title input field
+- Category dropdown
+- Rich text editor for content
+- Attach media option
+- Post/Cancel buttons
+
+**Special Features:**
+- Genuine Price List section for transparent local pricing
+- Verified local guide marketplace integration
+- Weather & terrain advisories
+- Anti-fraud community reporting
+
+---
+
+## Page 7: Real-time Chat Interface
+
+**Prompt for Builder.io:**
+
+Create a professional chat interface:
+
+**Chat Window:**
+- Header: "Chat with Tourist: [Name]" or "Chat with Guardian: [Name]"
+- Message history with left/right alignment
+- Typing indicators
+- Message status (sent, delivered, read)
+- Emergency escalation button
+- File/media sharing capability
+
+**Guardian Features:**
+- Live location sharing
+- Quick response templates
+- Escalation to authorities option
+- Chat history logging
+
+---
+
+## Page 8: Additional Feature Modals
+
+**Emergency Access Modal:**
+- Voice and text input options
+- Multi-language support
+- Offline SMS fallback indication
+- Clear emergency contact display
+
+**Digital ID Kiosk Interface:**
+- QR scanner simulation
+- Document upload interface
+- Blockchain verification status
+- Temporary ID generation for entry points
+
+**Settings Page:**
+- Privacy controls dashboard
+- Data sharing preferences
+- Notification settings
+- Language selection
+- Offline mode configuration
+
+**Panic Button Interaction:**
+1. Click triggers: "Send Emergency Alert? This will notify authorities and your emergency contacts immediately even if OFFLINE" (highlight OFFLINE in red)
+2. After confirmation: Modal closes, bottom toast appears: "Panic Alert Successfully Sent to Authorities"
+3. Two buttons: "Track the Request" | "Thanks"
+4. Track Request opens detailed progress view with rescue management status
+
+---
+
+## Technical Requirements for All Pages:
+
+**Responsive Design:**
+- Mobile-first approach
+- Touch-friendly controls (minimum 44px targets)
+- Collapsible navigation for mobile
+
+**Animations:**
+- Smooth 200-500ms transitions
+- Subtle hover effects and micro-interactions
+- Glassmorphism backdrop-filter effects
+- Pulsing panic button animation
+
+**Accessibility:**
+- WCAG compliance
+- Screen reader support
+- High contrast mode support
+- Keyboard navigation
+
+**Performance:**
+- Optimized images and assets
+- Lazy loading for heavy components
+- Efficient CSS animations
+- No localStorage usage (in-memory storage only)
+
+**Visual Consistency:**
+- Consistent card shadows and borders
+- Unified icon set throughout
+- Proper spacing and typography scales
+- Color-coded status indicators
+
+This comprehensive specification covers all the features and improvements mentioned in your original documentation while maintaining the sophisticated, professional appearance needed for a Smart India Hackathon project.
