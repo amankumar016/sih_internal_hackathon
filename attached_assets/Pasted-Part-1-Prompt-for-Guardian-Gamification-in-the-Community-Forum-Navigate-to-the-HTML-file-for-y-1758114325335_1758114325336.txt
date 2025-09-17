@@ -1,0 +1,109 @@
+Part 1: Prompt for "Guardian Gamification" (in the Community Forum)
+"Navigate to the HTML file for your Community Forum page. At the top of this page, before the existing list of forum posts, I want you to insert a new, major feature section for 'Guardian Gamification'.
+
+This section should be built using the existing 'Glassmorphism' card styles and will consist of three parts:
+
+A. Main Progress & Leaderboard Section:
+
+Header: Add a main <h2> title: Guardian Gamification, with a <p> subtitle: Earn rewards for staying safe and helping others.
+
+Two-Column Layout: Create a two-column layout below the header.
+
+Left Column ('Your Progress'):
+
+Create a 'Glassmorphism' card titled <h3><i class="fas fa-trophy"></i> Your Progress</h3>.
+
+Inside, display:
+
+Level: Level 8 (large font) with a title below it: Safety Explorer.
+
+Total Points: 15,670 Total Points (aligned to the right).
+
+XP Progress Bar: A progress bar showing 2340 / 2500 towards the next level.
+
+Three Summary Cards: A row of three smaller cards for:
+
+Day Streak: 7
+
+Badges Earned: 5
+
+Global Rank: #4
+
+Right Column ('Leaderboard'):
+
+Create a 'Glassmorphism' card titled <h3><i class="fas fa-star"></i> Leaderboard</h3>.
+
+Inside, create a ranked list of users. Each list item should show a rank, user icon/avatar, name, and points.
+
+Highlight the current user.
+
+Populate with this mock data:
+
+#1 Priya Sharma - 18,450 pts
+
+#2 Amit Kumar - 17,230 pts
+
+#3 Rajesh Singh - 16,890 pts
+
+#4 You - 15,670 pts (highlighted row)
+
+#5 Diksha Patel - 15,120 pts
+
+B. Active Challenges Section:
+
+Below the Progress/Leaderboard section, add a new section titled <h2><i class="fas fa-crosshairs"></i> Active Challenges</h2>.
+
+Create a 2x2 grid of 'Glassmorphism' challenge cards. Each card should contain:
+
+An icon and a title (e.g., Daily Check-in Streak).
+
+An XP reward tag (e.g., +500 XP).
+
+A short description (e.g., Check-in daily for 7 days).
+
+A progress bar with a fraction (e.g., Progress 7 / 7).
+
+Create four mock challenges based on the provided image.
+
+C. Achievement Badges Section:
+
+Below the Active Challenges, add a final section titled <h2><i class="fas fa-user-check"></i> Achievement Badges</h2>.
+
+Create a responsive grid of 'Glassmorphism' badge cards. Each card should contain:
+
+A unique icon for the badge.
+
+The badge title (e.g., Safety Scout).
+
+A short description of how to earn it (e.g., Report 5 safety observations).
+
+A status tag, such as Earned.
+
+Create at least 8 mock badges based on the image, showing some as 'Earned' and others as locked/not yet earned for realism."
+
+Part 2: Prompt for "Today's Safety Tips" (on the Tourist Dashboard)
+"Now, navigate to the HTML file for your main Tourist Dashboard page.
+
+Find the Location: Locate the header element that contains the <h1>Tourist Dashboard</h1> and its subtitle (Currently in: Shillong, Meghalaya).
+
+Insert the Component: Directly below this header, in the empty space, insert the following component.
+
+Card Structure:
+
+Create a 'Glassmorphism' card.
+
+Inside the card, add a header with a shield icon and the title: <h2><i class="fas fa-shield-alt"></i> Today's Safety Tips</h2>.
+
+Below the title, add a bulleted list (<ul>) with the following mock safety tips:
+
+Weather is clear - perfect for sightseeing
+
+Carry extra water for high altitude areas in Meghalaya
+
+Keep emergency contacts updated on your profile
+
+Stay with your group at all times, especially in crowded markets
+
+Remember today is Wednesday, September 17th. Some local shops may close early.
+
+Please ensure all new components are responsive and use the existing site-wide styles for fonts, colors, and cards."
