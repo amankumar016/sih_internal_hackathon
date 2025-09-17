@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -9,6 +9,9 @@ export default function VoiceEmergency() {
   const [selectedLanguage, setSelectedLanguage] = useState("english");
   const [isRecording, setIsRecording] = useState(false);
   const [isHelplineModalOpen, setIsHelplineModalOpen] = useState(false);
+  const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const audioChunksRef = useRef<Blob[]>([]);
   const { toast } = useToast();
 
   const languages = [
@@ -34,19 +37,60 @@ export default function VoiceEmergency() {
     setSelectedLanguage(language);
   };
 
-  const handleMicrophoneClick = () => {
-    const newRecordingState = !isRecording;
-    setIsRecording(newRecordingState);
-    
-    console.log("Voice recording:", newRecordingState ? "started" : "stopped");
-    
-    // Show success toast when recording stops
-    if (!newRecordingState) {
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mediaRecorder = new MediaRecorder(stream);
+      mediaRecorderRef.current = mediaRecorder;
+      audioChunksRef.current = [];
+
+      mediaRecorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          audioChunksRef.current.push(event.data);
+        }
+      };
+
+      mediaRecorder.onstop = () => {
+        const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/wav' });
+        setAudioBlob(audioBlob);
+        
+        // Stop all tracks to release microphone
+        stream.getTracks().forEach(track => track.stop());
+        
+        toast({
+          title: "Voice recorded successfully",
+          description: "Your voice message has been captured",
+          duration: 3000,
+        });
+      };
+
+      mediaRecorder.start();
+      setIsRecording(true);
+      console.log("Voice recording: started");
+      
+    } catch (error) {
+      console.error("Error accessing microphone:", error);
       toast({
-        title: "Voice recorded successfully",
-        description: "Your voice message has been captured",
-        duration: 3000,
+        title: "Microphone access denied",
+        description: "Please allow microphone access to record voice messages",
+        duration: 4000,
       });
+    }
+  };
+
+  const stopRecording = () => {
+    if (mediaRecorderRef.current && isRecording) {
+      mediaRecorderRef.current.stop();
+      setIsRecording(false);
+      console.log("Voice recording: stopped");
+    }
+  };
+
+  const handleMicrophoneClick = () => {
+    if (isRecording) {
+      stopRecording();
+    } else {
+      startRecording();
     }
   };
 

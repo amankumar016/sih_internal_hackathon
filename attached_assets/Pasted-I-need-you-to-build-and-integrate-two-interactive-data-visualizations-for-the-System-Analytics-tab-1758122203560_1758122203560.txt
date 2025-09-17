@@ -1,0 +1,52 @@
+I need you to build and integrate two interactive data visualizations for the 'System Analytics' tab on my Rescue Dashboard. Your task is to generate these charts using a suitable JavaScript charting library like Chart.js, ensuring they are not static images but live, responsive elements. They must fit perfectly within their designated content cards.
+
+Chart 1: Weekly Tourist Activity
+Objective: In the card labeled 'Weekly Tourist Activity', create a dynamic and interactive area line chart.
+
+Data to Visualize:
+
+X-Axis (Days): Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday.
+
+Y-Axis (Activity Count): Use the following mock data points in order for the week: [1200, 1450, 1600, 1500, 2200, 3000, 3300].
+
+Visual Style:
+
+The design should be clean and modern, matching the provided reference image.
+
+The line itself should be a solid purple color, with circular markers for each data point.
+
+The area beneath the line should be filled with a light, semi-transparent purple gradient.
+
+Interactivity:
+
+The chart must be interactive. When a user hovers their mouse over any data point (e.g., Wednesday), a tooltip should appear, displaying the day and its exact value (e.g., "Wed: 1600").
+
+Chart 2: Safety Score Distribution
+Objective: In the card labeled 'Safety Score Distribution', create a clean and interactive donut chart.
+
+Data to Visualize: The chart should represent the distribution of tourist safety scores with the following four categories and percentages:
+
+Excellent: 35%
+
+Good: 25%
+
+Fair: 20%
+
+Poor: 20%
+
+Visual Style:
+
+The design should be a donut chart (a pie chart with a hole in the center).
+
+Use distinct, professional colors for each segment: a vibrant green for 'Excellent', a warm yellow for 'Good', a calm blue for 'Fair', and a warning red for 'Poor'.
+
+Interactivity & Legend:
+
+The chart must include a clear legend at the bottom, with colored dots and labels for each category.
+
+When a user hovers over a segment of the donut, that segment should slightly pop out or highlight to show it's interactive.
+
+Final Requirements:
+Library Integration: Please handle the complete integration of the chosen charting library. This includes adding the necessary script (e.g., a CDN link for Chart.js) to the HTML file.
+
+Responsiveness: It is crucial that both charts are fully responsive. They must automatically resize to fit perfectly within their parent cards on any screen size, from mobile to large desktop monitors, without distortion or overflow."

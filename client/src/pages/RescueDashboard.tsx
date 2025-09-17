@@ -21,8 +21,31 @@ import {
 } from "lucide-react";
 import NavigationHeader from "@/components/NavigationHeader";
 import manaliMapImg from '@assets/image_1758117701636.png';
-import weeklyTouristChartImg from '@assets/Gemini_Generated_Image_tgc8astgc8astgc8_1758121434467.png';
-import safetyScoreChartImg from '@assets/Gemini_Generated_Image_savncssavncssavn_1758121434467.png';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler,
+  ArcElement,
+} from 'chart.js';
+import { Line, Doughnut } from 'react-chartjs-2';
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler,
+  ArcElement
+);
 
 interface Alert {
   id: string;
@@ -37,6 +60,149 @@ interface Alert {
 export default function RescueDashboard() {
   const [activeTab, setActiveTab] = useState("live-alerts");
   const [selectedAlert, setSelectedAlert] = useState<Alert | null>(null);
+
+  // Weekly Tourist Activity Chart Data
+  const weeklyActivityData = {
+    labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+    datasets: [
+      {
+        label: 'Tourist Activity',
+        data: [1200, 1450, 1600, 1500, 2200, 3000, 3300],
+        fill: true,
+        borderColor: '#8B5CF6',
+        backgroundColor: 'rgba(139, 92, 246, 0.1)',
+        pointBackgroundColor: '#8B5CF6',
+        pointBorderColor: '#ffffff',
+        pointBorderWidth: 2,
+        pointRadius: 6,
+        pointHoverRadius: 8,
+        tension: 0.4,
+      },
+    ],
+  };
+
+  const weeklyActivityOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: false,
+      },
+      tooltip: {
+        mode: 'index' as const,
+        intersect: false,
+        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+        titleColor: '#374151',
+        bodyColor: '#6B7280',
+        borderColor: '#E5E7EB',
+        borderWidth: 1,
+        borderRadius: 8,
+        padding: 12,
+        displayColors: false,
+        callbacks: {
+          label: function(context: any) {
+            return `${context.parsed.y.toLocaleString()} visitors`;
+          }
+        }
+      },
+    },
+    scales: {
+      x: {
+        grid: {
+          display: false,
+        },
+        border: {
+          display: false,
+        },
+        ticks: {
+          color: '#9CA3AF',
+          font: {
+            size: 12,
+          }
+        }
+      },
+      y: {
+        grid: {
+          color: '#F3F4F6',
+        },
+        border: {
+          display: false,
+        },
+        ticks: {
+          color: '#9CA3AF',
+          font: {
+            size: 12,
+          },
+          callback: function(value: any) {
+            return value.toLocaleString();
+          }
+        }
+      },
+    },
+    interaction: {
+      mode: 'nearest' as const,
+      axis: 'x' as const,
+      intersect: false,
+    },
+  };
+
+  // Safety Score Distribution Chart Data
+  const safetyScoreData = {
+    labels: ['Excellent', 'Good', 'Fair', 'Poor'],
+    datasets: [
+      {
+        data: [35, 25, 20, 20],
+        backgroundColor: [
+          '#10B981', // Green for Excellent
+          '#F59E0B', // Yellow for Good  
+          '#3B82F6', // Blue for Fair
+          '#EF4444', // Red for Poor
+        ],
+        borderWidth: 0,
+        cutout: '60%',
+        hoverBorderWidth: 2,
+        hoverBorderColor: '#ffffff',
+      },
+    ],
+  };
+
+  const safetyScoreOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: true,
+        position: 'bottom' as const,
+        labels: {
+          usePointStyle: true,
+          pointStyle: 'circle',
+          padding: 20,
+          font: {
+            size: 12,
+          },
+          color: '#374151',
+        }
+      },
+      tooltip: {
+        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+        titleColor: '#374151',
+        bodyColor: '#6B7280',
+        borderColor: '#E5E7EB',
+        borderWidth: 1,
+        borderRadius: 8,
+        padding: 12,
+        displayColors: true,
+        callbacks: {
+          label: function(context: any) {
+            return `${context.label}: ${context.parsed}%`;
+          }
+        }
+      },
+    },
+    interaction: {
+      intersect: false,
+    },
+  };
 
   const mockAlerts: Alert[] = [
     {
@@ -531,7 +697,9 @@ export default function RescueDashboard() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="weekly-tourist-chart-content rounded-lg h-64"></div>
+                  <div className="h-64 p-4">
+                    <Line data={weeklyActivityData} options={weeklyActivityOptions} />
+                  </div>
                 </CardContent>
               </Card>
 
@@ -543,7 +711,9 @@ export default function RescueDashboard() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="safety-score-chart-content rounded-lg h-64"></div>
+                  <div className="h-64 p-4">
+                    <Doughnut data={safetyScoreData} options={safetyScoreOptions} />
+                  </div>
                 </CardContent>
               </Card>
             </div>
