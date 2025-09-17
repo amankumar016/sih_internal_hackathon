@@ -340,29 +340,65 @@ export default function TrackPanicModal({ isOpen, onClose }: TrackPanicModalProp
                         backgroundBlendMode: 'overlay'
                       }}
                     >
-                      {/* Live Location Indicator */}
+                      {/* Enhanced Live Location Indicator with Multi-Ring Pulse */}
                       <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
                         <div className="relative">
-                          <div className="w-4 h-4 bg-red-500 rounded-full border-2 border-white shadow-lg animate-pulse"></div>
-                          <div className="absolute inset-0 w-4 h-4 bg-red-400 rounded-full animate-ping opacity-75"></div>
+                          {/* Core location pin */}
+                          <div className="w-5 h-5 bg-red-500 rounded-full border-2 border-white shadow-xl z-10 relative">
+                            <div className="absolute inset-1 bg-red-600 rounded-full animate-pulse"></div>
+                          </div>
+                          {/* Multi-layer pulse rings */}
+                          <div className="absolute inset-0 w-5 h-5 bg-red-400 rounded-full animate-ping opacity-75"></div>
+                          <div className="absolute -inset-1 w-7 h-7 bg-red-300 rounded-full animate-ping opacity-50" style={{animationDelay: '0.5s'}}></div>
+                          <div className="absolute -inset-2 w-9 h-9 bg-red-200 rounded-full animate-ping opacity-25" style={{animationDelay: '1s'}}></div>
+                          {/* Glow effect */}
+                          <div className="absolute -inset-3 w-11 h-11 bg-red-500 rounded-full opacity-20 blur-sm animate-pulse"></div>
                         </div>
                       </div>
                       
-                      {/* Moving Unit Icons */}
-                      {assignedUnits.map((unit) => (
+                      {/* Enhanced Moving Unit Icons with Trails */}
+                      {assignedUnits.map((unit, index) => (
                         <div 
                           key={unit.id}
-                          className="absolute transition-all duration-3000"
+                          className="absolute"
                           style={{
                             left: `${unit.position?.x}px`,
                             top: `${unit.position?.y}px`,
-                            animation: `move-${unit.type} 4s ease-in-out infinite`
+                            animation: `realistic-move-${index + 1} 6s ease-in-out infinite`
                           }}
                         >
-                          <div className={`w-3 h-3 rounded-full ${
-                            unit.type === "police" ? "bg-blue-500" : "bg-orange-500"
-                          } shadow-lg`}>
-                            <div className="absolute inset-0 rounded-full animate-pulse bg-white opacity-40"></div>
+                          {/* Movement trail effect */}
+                          <div className={`absolute inset-0 w-6 h-6 rounded-full ${
+                            unit.type === "police" ? "bg-blue-400" : "bg-orange-400"
+                          } opacity-20 animate-ping`} style={{animationDelay: '0.2s'}}></div>
+                          <div className={`absolute inset-0 w-4 h-4 rounded-full ${
+                            unit.type === "police" ? "bg-blue-300" : "bg-orange-300"
+                          } opacity-40 animate-ping`} style={{animationDelay: '0.1s'}}></div>
+                          
+                          {/* Main unit icon with enhanced styling */}
+                          <div className={`relative w-4 h-4 rounded-full border-2 border-white shadow-xl ${
+                            unit.type === "police" ? "bg-blue-600" : "bg-orange-600"
+                          }`} style={{
+                            boxShadow: `0 0 12px ${unit.type === "police" ? "rgba(37, 99, 235, 0.6)" : "rgba(234, 88, 12, 0.6)"}`
+                          }}>
+                            {/* Inner glow */}
+                            <div className={`absolute inset-1 rounded-full ${
+                              unit.type === "police" ? "bg-blue-300" : "bg-orange-300"
+                            } animate-pulse opacity-80`}></div>
+                            
+                            {/* Direction indicator arrow */}
+                            <div className={`absolute -top-1 left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-2 border-r-2 border-b-2 border-transparent ${
+                              unit.type === "police" ? "border-b-blue-200" : "border-b-orange-200"
+                            }`} style={{
+                              animation: `directional-pulse 2s ease-in-out infinite`
+                            }}></div>
+                          </div>
+                          
+                          {/* Unit label that follows */}
+                          <div className={`absolute -bottom-6 left-1/2 transform -translate-x-1/2 text-xs font-bold px-2 py-1 rounded ${
+                            unit.type === "police" ? "bg-blue-600 text-white" : "bg-orange-600 text-white"
+                          } shadow-lg whitespace-nowrap`}>
+                            {unit.name}
                           </div>
                         </div>
                       ))}
