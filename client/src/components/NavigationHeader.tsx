@@ -29,22 +29,28 @@ export default function NavigationHeader() {
       <div className="flex items-center justify-between px-4 py-3">
         {/* Logo */}
         <Link href="/" data-testid="link-logo">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-trust rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">G</span>
-            </div>
-            <span className="font-bold text-lg">GUARD</span>
+          <div className="flex items-center gap-2 hover-elevate rounded-lg p-2 transition-all duration-200">
+            <img 
+              src="attached_assets/WhatsApp Image 2025-09-10 at 11.53.34 AM_1758109238264.jpeg" 
+              alt="GUARD Logo" 
+              className="w-10 h-10 rounded-lg object-contain"
+            />
+            <span className="font-bold text-xl bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">GUARD</span>
           </div>
         </Link>
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-6">
-          {navigationItems.slice(0, 4).map(({ path, label, icon: Icon }) => (
+          {navigationItems.slice(0, 4).map(({ path, label, icon: Icon }, index) => (
             <Link key={path} href={path}>
               <Button 
-                variant={location === path ? "secondary" : "ghost"}
+                variant="ghost"
                 size="sm"
-                className="text-sm"
+                className={`text-sm transition-all duration-300 hover-elevate active-elevate-2 rounded-lg font-medium border
+                  ${location === path 
+                    ? `${index % 2 === 0 ? 'bg-blue-100 text-blue-700 border-blue-300' : 'bg-green-100 text-green-700 border-green-300'}` 
+                    : `${index % 2 === 0 ? 'text-blue-600 hover:text-blue-700 border-transparent hover:border-blue-200' : 'text-green-600 hover:text-green-700 border-transparent hover:border-green-200'}`
+                  }`}
                 data-testid={`nav-${label.toLowerCase().replace(" ", "-")}`}
               >
                 <Icon className="w-4 h-4 mr-2" />
@@ -56,7 +62,7 @@ export default function NavigationHeader() {
 
         {/* Right Side */}
         <div className="flex items-center gap-3">
-          <LanguageSelector className="hidden md:flex" />
+          <LanguageSelector className="hidden md:flex text-blue-600 hover:text-blue-700 hover:bg-blue-50" />
           <PanicButton variant="header" />
           
           {/* Mobile Menu */}
@@ -72,8 +78,12 @@ export default function NavigationHeader() {
                   {navigationItems.map(({ path, label, icon: Icon }) => (
                     <Link key={path} href={path}>
                       <Button
-                        variant={location === path ? "secondary" : "ghost"}
-                        className="w-full justify-start"
+                        variant="ghost"
+                        className={`w-full justify-start transition-all duration-300 hover-elevate border
+                          ${location === path 
+                            ? 'bg-blue-100 text-blue-700 border-blue-300' 
+                            : 'text-blue-600 hover:text-blue-700 border-transparent hover:border-blue-200'
+                          }`}
                         onClick={() => setIsOpen(false)}
                         data-testid={`mobile-nav-${label.toLowerCase().replace(" ", "-")}`}
                       >

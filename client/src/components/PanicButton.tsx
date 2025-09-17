@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { AlertTriangle, Phone, Shield } from "lucide-react";
+import { AlertTriangle, Phone, Shield, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface PanicButtonProps {
@@ -12,19 +12,57 @@ interface PanicButtonProps {
 export default function PanicButton({ variant = "header", className = "" }: PanicButtonProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [alertSent, setAlertSent] = useState(false);
+  const [countdown, setCountdown] = useState(10);
+  const [isCountingDown, setIsCountingDown] = useState(false);
   const { toast } = useToast();
 
-  const handlePanicAlert = () => {
+  const handlePanicAlert = useCallback(() => {
     console.log("PANIC ALERT TRIGGERED");
     setAlertSent(true);
     setIsOpen(false);
+    setIsCountingDown(false);
+    setCountdown(10);
     
     toast({
       title: "Panic Alert Successfully Sent to Authorities",
       description: "Emergency responders have been notified of your location and situation.",
       duration: 5000,
     });
+  }, [toast]);
+
+  const handleCancelAlert = () => {
+    setIsOpen(false);
+    setIsCountingDown(false);
+    setCountdown(10);
+    toast({
+      title: "Alert Cancelled",
+      description: "Your panic alert was cancelled in time.",
+      duration: 3000,
+    });
   };
+
+  const startCountdown = () => {
+    setIsCountingDown(true);
+    setCountdown(10);
+  };
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    
+    if (isCountingDown && countdown > 0) {
+      timer = setTimeout(() => {
+        setCountdown(prev => prev - 1);
+      }, 1000);
+    } else if (isCountingDown && countdown === 0) {
+      handlePanicAlert();
+    }
+
+    return () => {
+      if (timer) {
+        clearTimeout(timer);
+      }
+    };
+  }, [isCountingDown, countdown, handlePanicAlert]);
 
   const getButtonSize = () => {
     switch (variant) {
@@ -49,7 +87,14 @@ export default function PanicButton({ variant = "header", className = "" }: Pani
 
   return (
     <>
-      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <Dialog open={isOpen} onOpenChange={(open) => {
+          if (!open && isCountingDown) {
+            // Cancel countdown if dialog is closed during countdown
+            handleCancelAlert();
+          } else {
+            setIsOpen(open);
+          }
+        }}>
         <DialogTrigger asChild>
           <Button 
             className={getButtonClasses()}
@@ -65,36 +110,88 @@ export default function PanicButton({ variant = "header", className = "" }: Pani
             )}
           </Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-md" data-testid="modal-panic-confirm">
+        <DialogContent 
+          className="sm:max-w-md" 
+          data-testid="modal-panic-confirm"
+          onEscapeKeyDown={(e) => {
+            if (isCountingDown) {
+              e.preventDefault();
+              handleCancelAlert();
+            }
+          }}
+          onPointerDownOutside={(e) => {
+            if (isCountingDown) {
+              e.preventDefault();
+              handleCancelAlert();
+            }
+          }}
+        >
           <DialogHeader>
-            <DialogTitle className="flex items-center text-destructive">
-              <Shield className="w-5 h-5 mr-2" />
-              Send Emergency Alert?
+            <DialogTitle className="flex items-center justify-between text-destructive">
+              <div className="flex items-center">
+                <Shield className="w-5 h-5 mr-2" />
+                {isCountingDown ? "Emergency Alert Activating" : "Send Emergency Alert?"}
+              </div>
+              {isCountingDown && (
+                <div className="flex items-center text-2xl font-bold text-destructive">
+                  {countdown}
+                </div>
+              )}
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
-            <p className="text-sm text-muted-foreground">
-              This will notify authorities and your emergency contacts immediately, 
-              even if <span className="text-destructive font-semibold">OFFLINE</span>.
-            </p>
-            <div className="flex space-x-3">
-              <Button
-                onClick={handlePanicAlert}
-                className="flex-1 bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                data-testid="button-confirm-panic"
-              >
-                <Phone className="w-4 h-4 mr-2" />
-                Send Alert
-              </Button>
-              <Button
-                onClick={() => setIsOpen(false)}
-                variant="outline"
-                className="flex-1"
-                data-testid="button-cancel-panic"
-              >
-                Cancel
-              </Button>
-            </div>
+            {!isCountingDown ? (
+              <>
+                <p className="text-sm text-muted-foreground">
+                  This will notify authorities and your emergency contacts immediately, 
+                  even if <span className="text-destructive font-semibold">OFFLINE</span>.
+                </p>
+                <p className="text-sm text-amber-600 bg-amber-50 p-3 rounded-lg border border-amber-200">
+                  ⚠️ After confirmation, you'll have 10 seconds to cancel if pressed by mistake.
+                </p>
+                <div className="flex space-x-3">
+                  <Button
+                    onClick={startCountdown}
+                    className="flex-1 bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                    data-testid="button-confirm-panic"
+                  >
+                    <Phone className="w-4 h-4 mr-2" />
+                    Send Alert
+                  </Button>
+                  <Button
+                    onClick={() => setIsOpen(false)}
+                    variant="outline"
+                    className="flex-1"
+                    data-testid="button-cancel-panic"
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="text-center space-y-4">
+                  <div className="text-6xl font-bold text-destructive animate-pulse">
+                    {countdown}
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    Emergency alert will be sent in <span className="font-semibold text-destructive">{countdown} seconds</span>
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    This will notify authorities and your emergency contacts immediately.
+                  </p>
+                </div>
+                <Button
+                  onClick={handleCancelAlert}
+                  variant="outline"
+                  className="w-full bg-white hover:bg-gray-50 text-gray-700 border-2 border-gray-300 font-semibold"
+                  data-testid="button-cancel-countdown"
+                >
+                  <X className="w-4 h-4 mr-2" />
+                  CANCEL ALERT
+                </Button>
+              </>
+            )}
           </div>
         </DialogContent>
       </Dialog>
