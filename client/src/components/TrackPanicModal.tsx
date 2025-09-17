@@ -45,6 +45,7 @@ interface ProgressStep {
   description?: string;
   subDetails?: string[];
   completedAt?: string;
+  timestamp?: string;
   dispatchId?: string;
   firNumber?: string;
 }
@@ -126,7 +127,14 @@ export default function TrackPanicModal({ isOpen, onClose }: TrackPanicModalProp
       status: "completed",
       description: "Emergency call logged and verified",
       completedAt: "7:37 PM",
-      subDetails: ["Call center agent: Priya M.", "Incident ID: INC-2025-01834"]
+      timestamp: "17-Sep-2025 19:37:42 IST",
+      dispatchId: "CALL-HP-7837",
+      subDetails: [
+        "Call center agent: Priya M. (ID: CCR-4521)",
+        "Incident ID: INC-2025-01834",
+        "Call duration: 3 min 24 sec",
+        "Location verified via GPS coordinates"
+      ]
     },
     {
       id: "2", 
@@ -134,15 +142,28 @@ export default function TrackPanicModal({ isOpen, onClose }: TrackPanicModalProp
       status: "in-progress",
       eta: 480, // 8 minutes in seconds
       description: "Local police units being dispatched",
-      dispatchId: "D45-IND",
-      subDetails: ["Dispatch confirmed at 7:39 PM", "Unit assignment in progress"]
+      timestamp: "17-Sep-2025 19:39:15 IST",
+      dispatchId: "D45-IND-POL",
+      subDetails: [
+        "Dispatch confirmed at 7:39 PM",
+        "Unit assignment: Patrol Car HP-02-MN-5847",
+        "Officer in charge: SI Rajesh Kumar",
+        "Radio frequency: CH-7 (139.650 MHz)"
+      ]
     },
     {
       id: "3",
       title: "Rescue team dispatched", 
       status: "pending",
       eta: 1080, // 18 minutes in seconds
-      description: "Emergency response team en route"
+      description: "Emergency response team en route",
+      dispatchId: "D45-IND-RSC",
+      subDetails: [
+        "Waiting for unit confirmation",
+        "Team leader: Inspector Amit Singh",
+        "Equipment status: Ready",
+        "Estimated response time: 18 minutes"
+      ]
     },
     {
       id: "4",
@@ -150,13 +171,27 @@ export default function TrackPanicModal({ isOpen, onClose }: TrackPanicModalProp
       status: "pending", 
       eta: 1200, // 20 minutes in seconds
       description: "Medical assistance being arranged",
-      subDetails: ["Ambulance from Apollo Hospital"]
+      dispatchId: "D45-IND-MED",
+      subDetails: [
+        "Ambulance: Apollo Hospital Unit-7",
+        "Paramedic team: Dr. Sarah & Nurse Meera",
+        "Medical equipment: Trauma kit & oxygen",
+        "Hospital notification: AIIMS Rishikesh"
+      ]
     },
     {
       id: "5",
       title: "e-FIR filed",
       status: "pending",
-      description: "Digital First Information Report"
+      description: "Digital First Information Report being processed",
+      firNumber: "FIR-HP-2025-091723",
+      dispatchId: "LGL-HP-4492",
+      subDetails: [
+        "Filing officer: ASI Mohan Lal",
+        "Station: Manali Police Station",
+        "Document ID: eFIR-25-091723-1837",
+        "Status: Awaiting victim statement"
+      ]
     }
   ];
 
@@ -779,6 +814,15 @@ export default function TrackPanicModal({ isOpen, onClose }: TrackPanicModalProp
                       <p className="text-sm text-muted-foreground mb-2">
                         {step.description}
                       </p>
+                      
+                      {/* Full timestamp for official tracking */}
+                      {step.timestamp && (
+                        <div className="mb-2">
+                          <Badge variant="outline" className="text-xs text-gray-600 bg-gray-50">
+                            📅 {step.timestamp}
+                          </Badge>
+                        </div>
+                      )}
                       
                       {/* Sub-details */}
                       {step.subDetails && step.subDetails.length > 0 && (
