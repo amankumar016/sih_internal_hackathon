@@ -7,6 +7,12 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 // Pages
 import Landing from "@/pages/Landing";
 import Dashboard from "@/pages/Dashboard";
+import Registration from "@/pages/Registration";
+import Login from "@/pages/Login";
+import CommunityForum from "@/pages/CommunityForum";
+import Chat from "@/pages/Chat";
+import Settings from "@/pages/Settings";
+import SaarthiAI from "@/pages/SaarthiAI";
 import NotFound from "@/pages/not-found";
 
 // Component Examples (for development/preview)
@@ -28,6 +34,12 @@ function Router() {
       {/* Main Application Routes */}
       <Route path="/" component={Landing} />
       <Route path="/dashboard" component={Dashboard} />
+      <Route path="/registration" component={Registration} />
+      <Route path="/login" component={Login} />
+      <Route path="/community" component={CommunityForum} />
+      <Route path="/chat" component={Chat} />
+      <Route path="/settings" component={Settings} />
+      <Route path="/saarthi" component={SaarthiAI} />
       
       {/* Component Examples (for development) */}
       <Route path="/examples/panic-button" component={PanicButtonExample} />

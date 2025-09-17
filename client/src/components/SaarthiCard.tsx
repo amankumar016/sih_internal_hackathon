@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Brain, Zap, TrendingUp, Shield } from "lucide-react";
+import { Link } from "wouter";
 
 export default function SaarthiCard() {
   const features = [
@@ -37,14 +38,15 @@ export default function SaarthiCard() {
           ))}
         </div>
         
-        <Button 
-          className="w-full bg-trust text-trust-foreground hover:bg-trust/90"
-          data-testid="button-access-saarthi"
-          onClick={() => console.log("Access Saarthi clicked")}
-        >
-          <Brain className="w-4 h-4 mr-2" />
-          Access Saarthi Features
-        </Button>
+        <Link href="/saarthi">
+          <Button 
+            className="w-full bg-trust text-trust-foreground hover:bg-trust/90"
+            data-testid="button-access-saarthi"
+          >
+            <Brain className="w-4 h-4 mr-2" />
+            Access Saarthi Features
+          </Button>
+        </Link>
         
         <div className="text-xs text-muted-foreground text-center">
           Powered by Neural Networks & Machine Learning

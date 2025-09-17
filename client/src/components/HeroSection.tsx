@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowRight, Mic, CreditCard, Shield, MapPin } from "lucide-react";
+import { Link } from "wouter";
 import heroImage from "@assets/generated_images/Meghalaya_waterfall_hero_background_52ebdbd8.png";
 
 export default function HeroSection() {
@@ -77,15 +78,16 @@ export default function HeroSection() {
 
         {/* Get Started */}
         <div className="mt-8">
-          <Button 
-            size="lg" 
-            className="bg-trust text-trust-foreground hover:bg-trust/90 px-8 py-3 text-lg"
-            onClick={() => console.log("Get started clicked")}
-            data-testid="button-get-started"
-          >
-            Get Started
-            <ArrowRight className="w-5 h-5 ml-2" />
-          </Button>
+          <Link href="/registration">
+            <Button 
+              size="lg" 
+              className="bg-trust text-trust-foreground hover:bg-trust/90 px-8 py-3 text-lg"
+              data-testid="button-get-started"
+            >
+              Get Started
+              <ArrowRight className="w-5 h-5 ml-2" />
+            </Button>
+          </Link>
         </div>
       </div>
     </section>

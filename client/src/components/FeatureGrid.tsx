@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Link } from "wouter";
 import { 
   Users, 
   MessageSquare, 
@@ -18,6 +19,7 @@ interface Feature {
   description: string;
   color: string;
   action: string;
+  href?: string;
 }
 
 const features: Feature[] = [
@@ -26,14 +28,16 @@ const features: Feature[] = [
     label: "Community Forum",
     description: "Connect with travelers",
     color: "text-trust",
-    action: "community"
+    action: "community",
+    href: "/community"
   },
   {
     icon: MessageSquare,
     label: "Real-time Chat",
     description: "Chat with guardians",
     color: "text-success",
-    action: "chat"
+    action: "chat",
+    href: "/chat"
   },
   {
     icon: GamepadIcon,
@@ -47,14 +51,16 @@ const features: Feature[] = [
     label: "AI Guide",
     description: "Smart recommendations",
     color: "text-success",
-    action: "ai-guide"
+    action: "ai-guide",
+    href: "/saarthi"
   },
   {
     icon: Settings,
     label: "Settings",
     description: "Privacy & preferences",
     color: "text-muted-foreground",
-    action: "settings"
+    action: "settings",
+    href: "/settings"
   },
   {
     icon: MessageCircle,
@@ -75,7 +81,8 @@ const features: Feature[] = [
     label: "Issue Digital ID",
     description: "Generate at kiosk",
     color: "text-warning",
-    action: "digital-id"
+    action: "digital-id",
+    href: "/registration"
   },
 ];
 
@@ -90,14 +97,8 @@ export default function FeatureGrid() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {features.map((feature, index) => {
             const Icon = feature.icon;
-            return (
-              <Button
-                key={index}
-                variant="outline"
-                className="h-auto p-4 flex flex-col items-center gap-3 hover-elevate"
-                onClick={() => handleFeatureClick(feature.action)}
-                data-testid={`button-feature-${feature.action}`}
-              >
+            const buttonContent = (
+              <>
                 <div className={`${feature.color} p-2 rounded-lg bg-background/50`}>
                   <Icon className="w-6 h-6" />
                 </div>
@@ -107,6 +108,28 @@ export default function FeatureGrid() {
                     {feature.description}
                   </div>
                 </div>
+              </>
+            );
+
+            return feature.href ? (
+              <Link key={index} href={feature.href}>
+                <Button
+                  variant="outline"
+                  className="h-auto p-4 flex flex-col items-center gap-3 hover-elevate w-full"
+                  data-testid={`button-feature-${feature.action}`}
+                >
+                  {buttonContent}
+                </Button>
+              </Link>
+            ) : (
+              <Button
+                key={index}
+                variant="outline"
+                className="h-auto p-4 flex flex-col items-center gap-3 hover-elevate"
+                onClick={() => handleFeatureClick(feature.action)}
+                data-testid={`button-feature-${feature.action}`}
+              >
+                {buttonContent}
               </Button>
             );
           })}

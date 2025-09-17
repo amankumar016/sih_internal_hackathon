@@ -13,11 +13,11 @@ interface NavigationItem {
 }
 
 const navigationItems: NavigationItem[] = [
-  { path: "/", label: "Dashboard", icon: Home },
+  { path: "/dashboard", label: "Dashboard", icon: Home },
   { path: "/community", label: "Community Forum", icon: Users },
   { path: "/chat", label: "Real-time Chat", icon: MessageSquare },
-  { path: "/settings", label: "Settings", icon: Settings },
-  { path: "/help", label: "Help", icon: HelpCircle },
+  { path: "/saarthi", label: "Saarthi AI", icon: Settings },
+  { path: "/settings", label: "Settings", icon: HelpCircle },
 ];
 
 export default function NavigationHeader() {

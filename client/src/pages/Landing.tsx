@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Link } from "wouter";
 import HeroSection from "@/components/HeroSection";
 import NavigationHeader from "@/components/NavigationHeader";
 import PanicButton from "@/components/PanicButton";
@@ -64,13 +65,14 @@ export default function Landing() {
           </div>
           
           <div className="text-center mt-12">
-            <Button 
-              size="lg"
-              onClick={() => setShowRegistration(true)}
-              data-testid="button-start-journey"
-            >
-              Start Your Safe Journey
-            </Button>
+            <Link href="/registration">
+              <Button 
+                size="lg"
+                data-testid="button-start-journey"
+              >
+                Start Your Safe Journey
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
