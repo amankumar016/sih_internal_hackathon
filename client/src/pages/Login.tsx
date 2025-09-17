@@ -7,40 +7,78 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { Shield, Phone, Mail, Eye, EyeOff } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Shield, Phone, Mail, User, CreditCard } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { useToast } from "@/hooks/use-toast";
 
-const loginSchema = z.object({
-  phoneNumber: z.string().regex(/^[6-9]\d{9}$/, "Please enter a valid Indian mobile number"),
-  touristId: z.string().min(8, "Tourist ID is required"),
+const touristLoginSchema = z.object({
+  username: z.string().min(3, "Username must be at least 3 characters"),
+  contactNumber: z.string().regex(/^[6-9]\d{9}$/, "Please enter a valid Indian mobile number"),
+  emergencyContact: z.string().regex(/^[6-9]\d{9}$/, "Please enter a valid emergency contact number"),
 });
 
-type LoginForm = z.infer<typeof loginSchema>;
+const authorityLoginSchema = z.object({
+  username: z.string().min(3, "Username must be at least 3 characters"),
+  contactNumber: z.string().regex(/^[6-9]\d{9}$/, "Please enter a valid Indian mobile number"),
+  identityNumber: z.string().min(6, "Identity number is required"),
+});
+
+type TouristLoginForm = z.infer<typeof touristLoginSchema>;
+type AuthorityLoginForm = z.infer<typeof authorityLoginSchema>;
 
 export default function Login() {
   const [, setLocation] = useLocation();
-  const [showTouristId, setShowTouristId] = useState(false);
+  const [activeTab, setActiveTab] = useState("tourist");
   const { toast } = useToast();
   
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm<LoginForm>({
-    resolver: zodResolver(loginSchema),
+  const touristForm = useForm<TouristLoginForm>({
+    resolver: zodResolver(touristLoginSchema),
+    defaultValues: {
+      username: "",
+      contactNumber: "",
+      emergencyContact: "",
+    },
   });
 
-  const onSubmit = async (data: LoginForm) => {
-    console.log("Login attempt:", data);
+  const authorityForm = useForm<AuthorityLoginForm>({
+    resolver: zodResolver(authorityLoginSchema),
+    defaultValues: {
+      username: "",
+      contactNumber: "",
+      identityNumber: "",
+    },
+  });
+
+  const onTouristSubmit = async (data: TouristLoginForm) => {
+    console.log("Tourist login attempt:", data);
     
     // Mock authentication delay
     await new Promise(resolve => setTimeout(resolve, 1500));
     
     // Mock successful login
     toast({
-      title: "Welcome back!",
+      title: "Welcome Tourist!",
       description: "Successfully logged in to your GUARD account.",
+      duration: 3000,
+    });
+    
+    // Navigate to dashboard
+    setTimeout(() => {
+      setLocation("/dashboard");
+    }, 1000);
+  };
+
+  const onAuthoritySubmit = async (data: AuthorityLoginForm) => {
+    console.log("Authority login attempt:", data);
+    
+    // Mock authentication delay
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    
+    // Mock successful login
+    toast({
+      title: "Welcome Authority!",
+      description: "Successfully logged in to your GUARD admin account.",
       duration: 3000,
     });
     
@@ -65,12 +103,12 @@ export default function Login() {
         {/* Logo and Header */}
         <div className="text-center space-y-3">
           <div className="flex items-center justify-center">
-            <div className="w-16 h-16 bg-trust rounded-lg flex items-center justify-center">
+            <div className="w-16 h-16 bg-primary/10 border border-primary/20 rounded-lg flex items-center justify-center">
               <Shield className="w-8 h-8 text-white" />
             </div>
           </div>
           <div>
-            <h1 className="text-2xl font-bold">Welcome to GUARD</h1>
+            <h1 className="text-2xl font-bold">Sign Up</h1>
             <p className="text-muted-foreground">Smart Tourist Safety Platform</p>
           </div>
         </div>
@@ -84,8 +122,8 @@ export default function Login() {
                   <Phone className="w-5 h-5 text-destructive" />
                 </div>
                 <div>
-                  <h3 className="font-medium text-sm">Emergency Access</h3>
-                  <p className="text-xs text-muted-foreground">Available without login</p>
+                  <h3 className="font-medium text-sm text-foreground">Emergency Access</h3>
+                  <p className="text-xs text-foreground/70">Available without login</p>
                 </div>
               </div>
               <Button
@@ -100,74 +138,140 @@ export default function Login() {
           </CardContent>
         </Card>
 
-        {/* Login Form */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Sign In to Your Account</CardTitle>
+        {/* Sign Up Form */}
+        <Card className="bg-card border-card-border">
+          <CardHeader className="bg-primary/5 border-b border-primary/10">
+            <CardTitle className="text-foreground">Sign Up</CardTitle>
           </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-              <div>
-                <Label htmlFor="phoneNumber">Registered Phone Number</Label>
-                <Input
-                  id="phoneNumber"
-                  {...register("phoneNumber")}
-                  placeholder="Enter your mobile number"
-                  data-testid="input-phone-login"
-                />
-                {errors.phoneNumber && (
-                  <p className="text-sm text-destructive mt-1">{errors.phoneNumber.message}</p>
-                )}
-              </div>
+          <CardContent className="p-6">
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+              <TabsList className="grid w-full grid-cols-2 mb-6">
+                <TabsTrigger value="tourist" className="flex items-center gap-2">
+                  <User className="w-4 h-4" />
+                  Tourist
+                </TabsTrigger>
+                <TabsTrigger value="authority" className="flex items-center gap-2">
+                  <CreditCard className="w-4 h-4" />
+                  Authority
+                </TabsTrigger>
+              </TabsList>
               
-              <div>
-                <Label htmlFor="touristId">Tourist ID</Label>
-                <div className="relative">
-                  <Input
-                    id="touristId"
-                    type={showTouristId ? "text" : "password"}
-                    {...register("touristId")}
-                    placeholder="Enter your GUARD Tourist ID"
-                    data-testid="input-tourist-id"
-                  />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    className="absolute right-0 top-0 h-full px-3 py-2"
-                    onClick={() => setShowTouristId(!showTouristId)}
-                    data-testid="button-toggle-tourist-id"
-                  >
-                    {showTouristId ? (
-                      <EyeOff className="h-4 w-4" />
-                    ) : (
-                      <Eye className="h-4 w-4" />
+              <TabsContent value="tourist">
+                <form onSubmit={touristForm.handleSubmit(onTouristSubmit)} className="space-y-4">
+                  <div>
+                    <Label htmlFor="tourist-username" className="text-foreground">Username</Label>
+                    <Input
+                      id="tourist-username"
+                      {...touristForm.register("username")}
+                      placeholder="Enter your username"
+                      className="bg-background text-foreground"
+                      data-testid="input-tourist-username"
+                    />
+                    {touristForm.formState.errors.username && (
+                      <p className="text-sm text-destructive mt-1">{touristForm.formState.errors.username.message}</p>
                     )}
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="tourist-contact" className="text-foreground">Contact Number</Label>
+                    <Input
+                      id="tourist-contact"
+                      {...touristForm.register("contactNumber")}
+                      placeholder="Enter your mobile number"
+                      className="bg-background text-foreground"
+                      data-testid="input-tourist-contact"
+                    />
+                    {touristForm.formState.errors.contactNumber && (
+                      <p className="text-sm text-destructive mt-1">{touristForm.formState.errors.contactNumber.message}</p>
+                    )}
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="tourist-emergency" className="text-foreground">Emergency Contact</Label>
+                    <Input
+                      id="tourist-emergency"
+                      {...touristForm.register("emergencyContact")}
+                      placeholder="Enter emergency contact number"
+                      className="bg-background text-foreground"
+                      data-testid="input-tourist-emergency"
+                    />
+                    {touristForm.formState.errors.emergencyContact && (
+                      <p className="text-sm text-destructive mt-1">{touristForm.formState.errors.emergencyContact.message}</p>
+                    )}
+                  </div>
+                  
+                  <Button
+                    type="submit"
+                    className="w-full bg-primary text-primary-foreground"
+                    disabled={touristForm.formState.isSubmitting}
+                    data-testid="button-tourist-login"
+                  >
+                    {touristForm.formState.isSubmitting ? "Logging In..." : "Tourist Login"}
                   </Button>
-                </div>
-                {errors.touristId && (
-                  <p className="text-sm text-destructive mt-1">{errors.touristId.message}</p>
-                )}
-                <p className="text-xs text-muted-foreground mt-1">
-                  Format: GRD-2025-XX-XXXX
-                </p>
-              </div>
+                </form>
+              </TabsContent>
               
-              <Button
-                type="submit"
-                className="w-full"
-                disabled={isSubmitting}
-                data-testid="button-sign-in"
-              >
-                {isSubmitting ? "Signing In..." : "Sign In"}
-              </Button>
-            </form>
+              <TabsContent value="authority">
+                <form onSubmit={authorityForm.handleSubmit(onAuthoritySubmit)} className="space-y-4">
+                  <div>
+                    <Label htmlFor="authority-username" className="text-foreground">Username</Label>
+                    <Input
+                      id="authority-username"
+                      {...authorityForm.register("username")}
+                      placeholder="Enter your username"
+                      className="bg-background text-foreground"
+                      data-testid="input-authority-username"
+                    />
+                    {authorityForm.formState.errors.username && (
+                      <p className="text-sm text-destructive mt-1">{authorityForm.formState.errors.username.message}</p>
+                    )}
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="authority-contact" className="text-foreground">Contact Number</Label>
+                    <Input
+                      id="authority-contact"
+                      {...authorityForm.register("contactNumber")}
+                      placeholder="Enter your mobile number"
+                      className="bg-background text-foreground"
+                      data-testid="input-authority-contact"
+                    />
+                    {authorityForm.formState.errors.contactNumber && (
+                      <p className="text-sm text-destructive mt-1">{authorityForm.formState.errors.contactNumber.message}</p>
+                    )}
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="authority-identity" className="text-foreground">Identity Number</Label>
+                    <Input
+                      id="authority-identity"
+                      {...authorityForm.register("identityNumber")}
+                      placeholder="Enter your identity number"
+                      className="bg-background text-foreground"
+                      data-testid="input-authority-identity"
+                    />
+                    {authorityForm.formState.errors.identityNumber && (
+                      <p className="text-sm text-destructive mt-1">{authorityForm.formState.errors.identityNumber.message}</p>
+                    )}
+                  </div>
+                  
+                  <Button
+                    type="submit"
+                    className="w-full bg-primary text-primary-foreground"
+                    disabled={authorityForm.formState.isSubmitting}
+                    data-testid="button-authority-login"
+                  >
+                    {authorityForm.formState.isSubmitting ? "Logging In..." : "Authority Login"}
+                  </Button>
+                </form>
+              </TabsContent>
+            </Tabs>
             
-            <div className="mt-4 space-y-4">
+            <div className="mt-6 space-y-4">
               <Separator />
               <div className="text-center space-y-3">
                 <p className="text-sm text-muted-foreground">
-                  Don't have a Digital Tourist ID?
+                  Already have an account?
                 </p>
                 <Link href="/registration">
                   <Button
@@ -175,7 +279,7 @@ export default function Login() {
                     className="w-full"
                     data-testid="button-register"
                   >
-                    Register for Tourist ID
+                    Go to Registration
                   </Button>
                 </Link>
               </div>
@@ -187,7 +291,7 @@ export default function Login() {
         <Card>
           <CardContent className="p-4">
             <div className="space-y-3">
-              <h4 className="font-medium text-sm">Need Help?</h4>
+              <h4 className="font-medium text-sm text-foreground">Need Help?</h4>
               <div className="grid grid-cols-2 gap-2">
                 <Button variant="outline" size="sm" data-testid="button-forgot-id">
                   <Mail className="w-4 h-4 mr-2" />
